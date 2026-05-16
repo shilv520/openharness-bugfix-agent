@@ -1,0 +1,42 @@
+# 密钥文件
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+/dist/
+/build/
+
+# Node
+node_modules/
+
+# 学习笔记 & 计划文档
+LEARNING_NOTES_*.md
+LEARNING_ORDER.md
+ULTIMATE_LEARNING_NOTES.md
+RESUME.md
+代码生成计划.md
+
+# 缓存
+.skill_embeddings.json
+
+# 运行时数据
+data/
+workspace/
+chroma_db/
+
+# IDE
+.vscode/
+.idea/
+.claude/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# 图片（运行时产物）
+*.png
+*.jpg
+*.svg

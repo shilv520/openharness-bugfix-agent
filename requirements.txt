@@ -1,0 +1,26 @@
+# ============================================
+# OpenHarness Bug Fix Agent - 全部依赖
+# ============================================
+
+# Web 框架
+fastapi>=0.100.0
+uvicorn>=0.23.0
+
+# 数据持久化
+redis>=5.0.0
+
+# 向量数据库
+chromadb>=0.4.0
+
+# 数据验证
+pydantic>=2.0.0
+
+# LLM 调用 + 环境变量
+httpx>=0.24.0
+python-dotenv>=1.0.0
+
+# JWT 认证
+PyJWT>=2.8.0
+
+# LangGraph (可选，用于 graph 模块)
+langgraph>=0.2.0

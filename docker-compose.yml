@@ -1,0 +1,132 @@
+services:
+  # ============================================
+  # FastAPI - HTTP API 后端 (核心服务)
+  # ============================================
+  api:
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
+    container_name: bugfix-agent-api
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+      # LLM 配置
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-https://api.deepseek.com/v1}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - DEEPSEEK_BASE_URL=${DEEPSEEK_BASE_URL:-https://api.deepseek.com/v1}
+      - DEEPSEEK_MODEL=${DEEPSEEK_MODEL:-deepseek-chat}
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - redis
+      - chromadb
+    restart: unless-stopped
+    networks:
+      - bugfix-agent-network
+
+  # ============================================
+  # MCP Server - Bug Fix Tools (Optional)
+  # ============================================
+  mcp-server:
+    build:
+      context: .
+      dockerfile: docker/mcp.Dockerfile
+    container_name: bugfix-agent-mcp
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-https://api.deepseek.com/v1}
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - bugfix-agent-network
+
+  # ============================================
+  # Agent Worker - 后台任务执行 (Optional)
+  # ============================================
+  bugfix-agent:
+    build:
+      context: .
+      dockerfile: docker/agent.Dockerfile
+    container_name: bugfix-agent-worker
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-https://api.deepseek.com/v1}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - DEEPSEEK_BASE_URL=${DEEPSEEK_BASE_URL:-https://api.deepseek.com/v1}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - redis
+      - chromadb
+    restart: unless-stopped
+    networks:
+      - bugfix-agent-network
+
+  # ============================================
+  # ChromaDB - 向量数据库
+  # ============================================
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: bugfix-agent-chroma
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+    restart: unless-stopped
+    networks:
+      - bugfix-agent-network
+
+  # ============================================
+  # Redis - 数据持久化
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: bugfix-agent-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    networks:
+      - bugfix-agent-network
+
+  # ============================================
+  # Nginx - 反向代理 + 前端托管
+  # ============================================
+  nginx:
+    image: nginx:alpine
+    container_name: bugfix-agent-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html:ro
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - bugfix-agent-network
+
+networks:
+  bugfix-agent-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+  chroma_data:
