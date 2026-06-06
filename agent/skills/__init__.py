@@ -39,11 +39,19 @@ from .manager import (
 from .tools import (
     SkillToolsHandler,
     get_tool_definitions,
+    build_skill_tools_for_agent,
     run_tool_sync,
 )
 
 from .sync_middleware import (
     SkillsSyncMiddleware,
+)
+
+from .skill_router import (
+    SkillRouter,
+    MatchResult,
+    get_skill_router,
+    AGENT_KEYWORD_TIERS,
 )
 
 # ── Legacy: Static Skill Loading (backward compatible) ──────────
@@ -83,9 +91,15 @@ __all__ = [
     # Tools (Agent-callable)
     "SkillToolsHandler",
     "get_tool_definitions",
+    "build_skill_tools_for_agent",
     "run_tool_sync",
     # Sync middleware
     "SkillsSyncMiddleware",
+    # Skill→Agent Router
+    "SkillRouter",
+    "MatchResult",
+    "get_skill_router",
+    "AGENT_KEYWORD_TIERS",
     # Legacy
     "SkillDefinition",
     "SkillRegistry",

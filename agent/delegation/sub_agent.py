@@ -88,6 +88,7 @@ class SubAgent:
         compressor=None,       # ContextCompressor 实例（上下文压缩）
         isolation=None,        # ContextIsolation 实例（上下文隔离）
         parent_boundary=None,  # 父ContextBoundary（Fork来源）
+        extra_skills: Dict[str, str] = None,  # 动态分配的 Skill {name: full_body}
     ):
         """
         Args:
@@ -100,6 +101,8 @@ class SubAgent:
             compressor: ContextCompressor（自动压缩上下文）
             isolation: ContextIsolation（上下文隔离管理器）
             parent_boundary: 父ContextBoundary（fork来源）
+            extra_skills: 动态分配的额外 Skill，格式 {skill_name: full_skill_body}
+                          由 SkillRouter 匹配后传入，Agent 启动时自动注入 System Prompt
         """
         self.definition = definition
         self.task_prompt = task_prompt
@@ -110,6 +113,7 @@ class SubAgent:
         self.compressor = compressor
         self.isolation = isolation
         self.parent_boundary = parent_boundary
+        self.extra_skills = extra_skills or {}
 
         self._task_id = uuid.uuid4().hex[:12]
         self._steps: List[Dict[str, Any]] = []
@@ -341,11 +345,11 @@ class SubAgent:
     # ── Prompt 构建 ───────────────────────────────────────────
 
     def _build_system_message(self) -> str:
-        """构建子Agent的system prompt"""
+        """构建子Agent的system prompt（含动态加载的 Skill）。"""
         tools_desc = self._describe_tools()
         schema_desc = json.dumps(self.definition.output_schema, ensure_ascii=False, indent=2)
 
-        return f"""{self.definition.system_prompt}
+        base = f"""{self.definition.system_prompt}
 
 ## 可用工具
 {tools_desc}
@@ -371,6 +375,34 @@ class SubAgent:
 最终报告必须符合以下结构:
 {schema_desc}
 """
+
+        # ── 动态注入额外 Skill ──────────────────────────────────
+        if self.extra_skills:
+            skill_sections = []
+            for skill_name, skill_body in self.extra_skills.items():
+                # 只取 body 部分（去掉 frontmatter 减少 token）
+                body_only = self._extract_skill_body(skill_body)
+                # 限制每个 Skill 最多注入 800 字符，避免撑爆上下文
+                truncated = body_only[:800]
+                if len(body_only) > 800:
+                    truncated += "\n\n[... 内容已截断，完整内容可通过 load_skill 获取 ...]"
+                skill_sections.append(
+                    f"### 动态加载 Skill: {skill_name}\n{truncated}"
+                )
+            base += "\n## 动态加载的扩展技能（根据任务自动匹配）\n\n"
+            base += "\n\n".join(skill_sections)
+            base += "\n\n请结合以上扩展技能完成当前任务。\n"
+
+        return base
+
+    def _extract_skill_body(self, content: str) -> str:
+        """从完整 SKILL.md 中提取 body（去掉 YAML frontmatter）。"""
+        if not content.startswith("---"):
+            return content
+        end_idx = content.find("\n---", 4)
+        if end_idx == -1:
+            return content
+        return content[end_idx + 4:].lstrip("\n")
 
     def _build_user_message(self) -> str:
         """构建用户任务消息"""

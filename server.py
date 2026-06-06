@@ -195,6 +195,30 @@ async def _init_components() -> Dict[str, Any]:
         # SubAgent 按需创建，这里只存 registry
         logger.info("  ✓ SubAgent (on-demand)")
 
+        # ── Skill 管理系统 ──
+        from agent.skills.manager import SkillManager
+        from agent.skills.skill_router import SkillRouter
+        skill_manager = SkillManager()
+        skill_manager.sync_all()          # Stage 1: 同步本地 Skill
+        skill_manager.restore_from_store()  # Stage 4: 恢复持久化 Skill
+        skill_router = SkillRouter(llm_config={
+            "api_key": os.environ.get("DEEPSEEK_API_KEY") or os.environ.get("OPENAI_API_KEY"),
+            "base_url": os.environ.get("OPENAI_BASE_URL", "https://api.deepseek.com/v1"),
+            "model": os.environ.get("DEEPSEEK_MODEL", "deepseek-chat"),
+        })
+        # 对所有 user scope 的 Skill 做一次预分配
+        all_fms = skill_manager.list_frontmatters()
+        _skill_assignments = {}  # {agent_name: [skill_name, ...]}
+        for fm in all_fms:
+            if fm.scope.value in ("user", "downloaded"):
+                matched = await skill_router.route(fm)
+                for agent in matched:
+                    _skill_assignments.setdefault(agent, []).append(fm.name)
+        if _skill_assignments:
+            logger.info(f"  ✓ SkillRouter: {_skill_assignments}")
+        else:
+            logger.info("  ✓ SkillRouter (no user skills to assign)")
+
         _components = {
             "vfs": vfs,
             "iso": iso,
@@ -206,6 +230,9 @@ async def _init_components() -> Dict[str, Any]:
             "memory": memory,
             "traj_store": traj_store,
             "workspace": workspace,
+            "skill_manager": skill_manager,
+            "skill_router": skill_router,
+            "skill_assignments": _skill_assignments,
         }
         logger.info("[Server] All components initialized")
         return _components
@@ -340,6 +367,173 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 
 
 # ═══════════════════════════════════════════════════════════════
+# Dynamic Agent Planning (Scenario C)
+# ═══════════════════════════════════════════════════════════════
+
+# 可用 Agent 类型定义 — 新增 Agent 只需在这加一条
+_AVAILABLE_AGENTS = {
+    "code-reviewer": {
+        "title": "审查代码中的Bug风险",
+        "task": "审查以下{language}代码，识别所有潜在Bug、安全漏洞和代码质量问题。输出每个Bug的严重级别、位置和修复建议。",
+        "depends_on_agents": [],       # 无前置依赖
+        "triggers": ["审查", "review", "检查", "check", "检测", "detect", "漏洞", "vulnerability"],
+    },
+    "bug-analyzer": {
+        "title": "分析Bug根因和影响范围",
+        "task": "深入分析代码审查发现的Bug，判定真假阳性，追溯根本原因，评估影响范围，推荐最优修复方案。",
+        "depends_on_agents": ["code-reviewer"],  # 依赖审查结果
+        "triggers": ["分析", "analyze", "根因", "root cause", "影响", "impact", "复杂", "complex"],
+    },
+    "code-fixer": {
+        "title": "生成修复补丁",
+        "task": "根据分析结果生成精确、安全、最小化的代码修复补丁。保持代码风格一致，不引入新问题。",
+        "depends_on_agents": ["bug-analyzer", "code-reviewer"],  # 至少需要审查结果
+        "triggers": ["修复", "fix", "补丁", "patch", "改", "修", "correct"],
+    },
+    "test-validator": {
+        "title": "验证修复正确性",
+        "task": "验证修复补丁的正确性：检查编译、逻辑一致性、无副作用、无回归风险。输出验证结果和置信度。",
+        "depends_on_agents": ["code-fixer"],
+        "triggers": ["验证", "validate", "测试", "test", "确认", "verify"],
+    },
+}
+
+
+async def _plan_agents(
+    description: str,
+    code: str,
+    language: str,
+    registry: Any,
+) -> List[Dict[str, Any]]:
+    """根据任务描述动态选择需要哪些 Agent。
+
+    策略：
+      1. 先用关键词启发式匹配（零成本、零延迟）
+      2. 如果描述模糊或匹配不到，回退到默认 3-agent 修复流水线
+      3. LLM 动态规划可选（未来扩展点）
+
+    Returns:
+        [{"agent": str, "title": str, "task": str}, ...]
+    """
+    desc_lower = (description or "").lower()
+
+    # 计算每个 Agent 是否被触发
+    triggered: set = set()
+    for agent_name, cfg in _AVAILABLE_AGENTS.items():
+        for keyword in cfg["triggers"]:
+            if keyword.lower() in desc_lower:
+                triggered.add(agent_name)
+                break
+
+    # "全面"/"完整"/"全部" → 触发全部 4 个
+    for kw in ["全面", "完整", "全部", "所有", "all", "full", "complete"]:
+        if kw.lower() in desc_lower:
+            triggered.update(_AVAILABLE_AGENTS.keys())
+            break
+
+    # 如果没有任何关键词匹配，默认走"修复"流程
+    if not triggered:
+        llm_plan = await _llm_classify_task(description, code, language)
+        if llm_plan:
+            logger.info(f"[PlanAgents] LLM classified: {[s['agent'] for s in llm_plan]}")
+            return llm_plan
+        triggered = {"code-reviewer", "code-fixer", "test-validator"}
+        logger.info(f"[PlanAgents] Fallback to default fix pipeline")
+
+    # ── 智能补全：确保依赖链完整 ──
+    # 修复 → 必须验证（修了不验等于白修）
+    if "code-fixer" in triggered:
+        triggered.add("test-validator")
+    # 修复/分析/验证 → 必须先审查（没审查就没有输入）
+    if ("code-fixer" in triggered or "bug-analyzer" in triggered or "test-validator" in triggered):
+        triggered.add("code-reviewer")
+    # 验证 → 必须有修复（没修验什么）
+    if "test-validator" in triggered:
+        triggered.add("code-fixer")
+
+    # 按依赖拓扑排序构建计划
+    agent_order = ["code-reviewer", "bug-analyzer", "code-fixer", "test-validator"]
+    plan = []
+    for agent_name in agent_order:
+        if agent_name not in triggered:
+            continue
+        cfg = _AVAILABLE_AGENTS[agent_name]
+        plan.append({
+            "agent": agent_name,
+            "title": cfg["title"],
+            "task": cfg["task"].format(language=language),
+            "depends_on_agents": cfg["depends_on_agents"],
+        })
+
+    logger.info(f"[PlanAgents] Selected {len(plan)} agents: {[s['agent'] for s in plan]}")
+    return plan
+
+
+async def _llm_classify_task(
+    description: str,
+    code: str,
+    language: str,
+) -> Optional[List[Dict[str, Any]]]:
+    """用 LLM 做一次轻量分类，决定需要哪些 Agent。"""
+    try:
+        import os as _os
+        api_key = _os.environ.get("OPENAI_API_KEY", "")
+        base_url = _os.environ.get("OPENAI_BASE_URL", "https://api.deepseek.com/v1")
+        model = _os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-pro")
+
+        if not api_key:
+            return None
+
+        prompt = f"""你是任务分类器。根据用户的描述，判断需要哪些 Agent 参与。
+
+可用 Agent:
+- code-reviewer: 代码审查，找Bug和安全漏洞
+- bug-analyzer: Bug根因分析（适用复杂Bug，简单Bug可跳过）
+- code-fixer: 生成修复补丁
+- test-validator: 验证修复
+
+语言: {language}
+用户描述: {description or "无描述"}
+代码片段: {code[:500]}
+
+输出 JSON 数组，列出需要的 Agent（按执行顺序）。简单任务用 2-3 个即可。
+示例: [{{"agent": "code-reviewer", "task": "审查空指针Bug"}}, {{"agent": "code-fixer", "task": "修复空指针"}}, {{"agent": "test-validator", "task": "验证修复"}}]
+
+只输出 JSON 数组。"""
+
+        import httpx
+        async with httpx.AsyncClient(timeout=15) as client:
+            resp = await client.post(
+                f"{base_url}/chat/completions",
+                headers={"Authorization": f"Bearer {api_key}"},
+                json={
+                    "model": model,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "temperature": 0.3,
+                    "max_tokens": 200,
+                },
+            )
+            content = resp.json()["choices"][0]["message"]["content"]
+            # 提取 JSON 数组
+            import re as _re
+            match = _re.search(r"\[[\s\S]*\]", content)
+            if match:
+                raw_plan = json.loads(match.group())
+                # 补全 task 字段
+                for step in raw_plan:
+                    agent = step.get("agent", "")
+                    if agent in _AVAILABLE_AGENTS and "task" not in step:
+                        step["task"] = _AVAILABLE_AGENTS[agent]["task"].format(language=language)
+                        step["title"] = _AVAILABLE_AGENTS[agent]["title"]
+                    step.setdefault("depends_on_agents", [])
+                return raw_plan
+        return None
+    except Exception as e:
+        logger.warning(f"[PlanAgents] LLM classification failed: {e}")
+        return None
+
+
+# ═══════════════════════════════════════════════════════════════
 # Core: Bug Fix Pipeline (orchestrates all components)
 # ═══════════════════════════════════════════════════════════════
 
@@ -359,6 +553,9 @@ async def _run_full_pipeline(
     registry = comp["registry"]
     memory = comp["memory"]
     workspace = comp["workspace"]
+    skill_manager = comp.get("skill_manager")
+    skill_router = comp.get("skill_router")
+    skill_assignments = comp.get("skill_assignments", {})
 
     # 每个会话创建独立实例，防止并发干扰
     from agent.context_compressor import ContextCompressor
@@ -386,19 +583,23 @@ async def _run_full_pipeline(
     iso.add_fact(root, "description", description)
     logger.info(f"[Pipeline:{session_id}] Root boundary: {root.boundary_id}")
 
-    # ── Step 3: 创建 TaskPersistence 计划 ──
-    todos = [
-        TaskItem(title="审查代码中的Bug风险", agent="code-reviewer"),
-        TaskItem(title="分析Bug根因和影响范围", agent="bug-analyzer", depends_on=[0]),
-        TaskItem(title="生成修复补丁", agent="code-fixer", depends_on=[1]),
-        TaskItem(title="验证修复正确性", agent="test-validator", depends_on=[2]),
-    ]
+    # ── Step 3: 动态规划 — 根据任务描述选择 Agent ──
+    agent_plan = await _plan_agents(description, code, language, registry)
+    todos = []
+    for i, step in enumerate(agent_plan):
+        deps = [j for j in range(i) if agent_plan[j]["agent"] in step.get("depends_on_agents", [])]
+        todos.append(TaskItem(
+            title=step["title"],
+            agent=step["agent"],
+            depends_on=deps if deps else ([] if i == 0 else [i - 1]),
+        ))
     plan = await tp.write_todos(
         session_id=session_id,
         todos=todos,
         title=f"修复 {description or code_path}",
     )
-    logger.info(f"[Pipeline:{session_id}] Plan: {plan.plan_id} ({plan.total_steps} steps)")
+    logger.info(f"[Pipeline:{session_id}] Plan: {plan.plan_id} ({plan.total_steps} steps, "
+                f"agents: {[s['agent'] for s in agent_plan]})")
 
     # ── Step 4: 上下文压缩器开始记录 ──
     compressor.add_message("system", f"BugFix session: {session_id}, language={language}")
@@ -411,17 +612,12 @@ async def _run_full_pipeline(
     failed_steps = []
     results: Dict[str, Any] = {}
 
-    # ── Step 5: 4-Agent 流水线 ──
-    agent_names = ["code-reviewer", "bug-analyzer", "code-fixer", "test-validator"]
-    agent_tasks = [
-        f"审查代码中的Bug风险、安全漏洞和代码质量问题",
-        f"深入分析Bug的根本原因、影响范围和修复策略",
-        f"根据分析结果生成精确、安全、最小化的修复补丁",
-        f"验证修复补丁的正确性，检查副作用和回归风险",
-    ]
+    # ── Step 5: 动态 Agent 流水线 ──
 
-    for i, (agent_name, task) in enumerate(zip(agent_names, agent_tasks)):
-        logger.info(f"[Pipeline:{session_id}] Step {i+1}/4: {agent_name}")
+    for i, step in enumerate(agent_plan):
+        agent_name = step["agent"]
+        task = step["task"]
+        logger.info(f"[Pipeline:{session_id}] Step {i+1}/{len(agent_plan)}: {agent_name}")
         await tp.update_todo(plan.plan_id, i, status="in_progress")
 
         # HITL 检查: 是否需要在此步骤前中断
@@ -429,15 +625,33 @@ async def _run_full_pipeline(
             logger.info(f"[Pipeline:{session_id}] HITL interrupt before: {agent_name}")
             # 记录打断（异步模式下通过 HITL API 恢复）
 
-        # 创建 SubAgent（带上下文隔离）
+        # ── 动态加载匹配的 Skill ──
+        extra_skills = {}
+        if skill_manager and skill_router and agent_name in skill_assignments:
+            for skill_name in skill_assignments.get(agent_name, []):
+                content = skill_manager.load_full_skill(skill_name)
+                if content:
+                    extra_skills[skill_name] = content
+                    logger.info(
+                        f"[Pipeline:{session_id}] {agent_name} ← 动态加载 Skill: {skill_name}"
+                    )
+
+        # ── 构建 Agent 可调用的 Skill 管理工具 ──
+        from agent.skills.tools import SkillToolsHandler, build_skill_tools_for_agent
+        skill_handler = SkillToolsHandler(skill_manager)
+        skill_tools = build_skill_tools_for_agent(skill_handler)
+
+        # 创建 SubAgent（带上下文隔离 + 动态 Skill + Skill 管理工具）
         sub = SubAgent(
             definition=registry.get(agent_name),
             task_prompt=task,
-            context={**pipeline_ctx, "step_index": i, "total_steps": 4},
+            context={**pipeline_ctx, "step_index": i, "total_steps": len(agent_plan)},
             isolation=iso,
             parent_boundary=root,
             compressor=compressor,
             max_iterations=2,
+            tools=skill_tools,
+            extra_skills=extra_skills,
         )
 
         # 执行
@@ -499,22 +713,34 @@ async def _run_full_pipeline(
     await memory.remember_fact(session_id, "language", language)
     await memory.remember_fact(session_id, "success", str(len(failed_steps) == 0))
 
-    # ── 返回结果（兼容旧前端格式）──
-    review_r = results.get("code-reviewer")
-    analysis_r = results.get("bug-analyzer")
-    fixer_r = results.get("code-fixer")
-    validator_r = results.get("test-validator")
-
+    # ── 返回结果（支持动态 Agent 列表 + 旧前端兼容）──
     def _ok(r) -> bool: return r.success if hasattr(r, 'success') else False
     def _txt(r) -> str: return (r.report or "")[:800] if hasattr(r, 'report') else ""
 
     final_plan = await tp.get_plan(plan.plan_id)
 
-    # 旧前端期望的字段
+    # 抽取各 Agent 结果（如果执行了的话）
+    review_r = results.get("code-reviewer")
+    analysis_r = results.get("bug-analyzer")
+    fixer_r = results.get("code-fixer")
+    validator_r = results.get("test-validator")
+
     review_report = _txt(review_r)
     analysis_report = _txt(analysis_r)
     fix_report = _txt(fixer_r)
     validation_report = _txt(validator_r)
+
+    # 动态 steps 列表（只包含实际执行了的 Agent）
+    dynamic_steps = []
+    for step in agent_plan:
+        agent = step["agent"]
+        r = results.get(agent)
+        dynamic_steps.append({
+            "step": agent,
+            "title": step["title"],
+            "success": _ok(r),
+            "report": _txt(r)[:300],
+        })
 
     return {
         # 新字段
@@ -525,21 +751,23 @@ async def _run_full_pipeline(
         "plan_title": plan.title,
         "completed_steps": completed_steps,
         "failed_steps": failed_steps,
+        "agent_plan": [{"agent": s["agent"], "title": s["title"]} for s in agent_plan],
+        "agent_results": {k: {"success": _ok(v), "report": _txt(v)[:500]} for k, v in results.items()},
+        # 旧前端兼容字段（始终包含，可能为空）
+        "success": len(failed_steps) == 0,
         "review_result": {"success": _ok(review_r), "report": review_report},
         "analysis_result": {"success": _ok(analysis_r), "report": analysis_report},
         "fix_result": {"success": _ok(fixer_r), "report": fix_report},
         "validation_result": {"success": _ok(validator_r), "report": validation_report},
-        # 旧前端兼容字段
-        "success": len(failed_steps) == 0,
         "review": {
             "bugs_found": 1 if review_report else 0,
-            "candidates": [{"location": "BigFraction.divide()", "type": "NullPointer/Arithmetic", "severity": "HIGH", "description": review_report[:200]}],
+            "candidates": [{"location": code_path, "type": "bug", "severity": "HIGH", "description": review_report[:200]}],
             "code_quality": "needs_fix",
         },
         "discussion": {"agreed": True, "consensus": analysis_report[:300]},
         "analysis": {
-            "bug_location": "BigFraction.divide()",
-            "bug_type": "NullPointer + ArithmeticException",
+            "bug_location": code_path,
+            "bug_type": "bug",
             "root_cause": analysis_report[:300],
             "fix_suggestion": fix_report[:300],
             "confidence": 0.9 if _ok(analysis_r) else 0.5,
@@ -547,13 +775,8 @@ async def _run_full_pipeline(
         "patch": fix_report,
         "fixed_code": fix_report,
         "test_passed": _ok(validator_r),
-        "total_steps": 4,
-        "steps": [
-            {"step": "review", "result": "success" if _ok(review_r) else "failed", "bugs_found": 1},
-            {"step": "analyze", "root_cause": analysis_report[:200]},
-            {"step": "fix", "patch_generated": _ok(fixer_r)},
-            {"step": "validate", "passed": _ok(validator_r)},
-        ],
+        "total_steps": len(agent_plan),
+        "steps": dynamic_steps,
         "error": None if len(failed_steps) == 0 else f"Failed: {failed_steps}",
         "created_at": datetime.now().isoformat(),
         "completed_at": datetime.now().isoformat(),
