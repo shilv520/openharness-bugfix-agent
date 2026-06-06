@@ -284,4 +284,4 @@ openharness-bugfix-agent/
 
 ## License
 
-MIT
+XiDian University
