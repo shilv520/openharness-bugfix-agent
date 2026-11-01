@@ -32,6 +32,7 @@ class SkillScope(str, Enum):
     USER = "user"            # User-created skills (persisted across sessions)
     DOWNLOADED = "downloaded"  # Downloaded from external sources
     SKILL_MANAGEMENT = "skill-management"  # Meta-skill for self-management
+    ARCHIVED = "archived"    # 低频 skill 归档区（外置记忆：不参与默认发现，仍可语义检索/按需加载）
 
 
 @dataclass
@@ -51,6 +52,9 @@ class SkillFrontmatter:
     path: str = ""            # relative path to SKILL.md on disk
     created_at: str = ""
     updated_at: str = ""
+    hit_count: int = 0        # 命中次数（统计机制 = memory，驱动生命周期升降级）
+    last_hit_at: str = ""     # 最近命中时间（ISO）
+    archived_from: str = ""   # 归档前的原 scope（用于恢复；空表示未归档）
 
     def to_dict(self) -> Dict:
         d = asdict(self)
@@ -73,6 +77,9 @@ class SkillFrontmatter:
             path=data.get("path", ""),
             created_at=data.get("created_at", ""),
             updated_at=data.get("updated_at", ""),
+            hit_count=int(data.get("hit_count", 0) or 0),
+            last_hit_at=data.get("last_hit_at", ""),
+            archived_from=data.get("archived_from", ""),
         )
 
     @property

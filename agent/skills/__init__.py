@@ -54,6 +54,10 @@ from .skill_router import (
     AGENT_KEYWORD_TIERS,
 )
 
+from .offline_memory import (
+    SkillDreamer,
+)
+
 # ── Legacy: Static Skill Loading (backward compatible) ──────────
 
 from .loader import (
@@ -100,6 +104,8 @@ __all__ = [
     "MatchResult",
     "get_skill_router",
     "AGENT_KEYWORD_TIERS",
+    # Offline memory (做梦)
+    "SkillDreamer",
     # Legacy
     "SkillDefinition",
     "SkillRegistry",

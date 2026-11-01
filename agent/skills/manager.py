@@ -156,11 +156,15 @@ class SkillManager:
     # Stage 2: Progressive Discovery
     # ═══════════════════════════════════════════════════════════════
 
-    def list_frontmatters(self, scope: str = None) -> List[SkillFrontmatter]:
+    def list_frontmatters(self, scope: str = None, include_archived: bool = False) -> List[SkillFrontmatter]:
         """Lists all skills — frontmatter only (name + description + tags + version).
 
         Agent calls this at startup to discover available skills
         without loading full content into its context window.
+
+        Archived skills are excluded by default — they live in memory
+        (外置记忆) and are only brought back via semantic search / explicit
+        restore, not during routine discovery.
 
         Corresponds to: Agent `ls /skills/{scope}/` in the PDF project.
         """
@@ -168,6 +172,8 @@ class SkillManager:
         if not fms:
             # Fallback: scan filesystem directly
             fms = self._scan_fs_frontmatters(scope)
+        if not include_archived:
+            fms = [f for f in fms if f.scope != SkillScope.ARCHIVED]
         return sorted(fms, key=lambda f: f.name)
 
     def load_full_skill(self, name: str) -> Optional[str]:
@@ -176,40 +182,49 @@ class SkillManager:
         Only called when the Agent actually needs the skill.
         The body is never injected into the System Prompt upfront.
 
+        Loading also records a usage hit (统计机制 = memory) and, if the
+        skill was archived, resurrects it (低频 → 高频 回升).
+
         Corresponds to: Agent `read_file("/skills/{scope}/{name}/SKILL.md")` in the PDF project.
         """
+        content: Optional[str] = None
+
         # Check cache first
         if name in self._content_cache:
-            return self._content_cache[name]
+            content = self._content_cache[name]
+        else:
+            # Check persistence for path
+            fm = self.persistence.get_skill_meta(name)
+            if fm and fm.path:
+                full_path = Path(fm.path)
+                if full_path.exists():
+                    content = load_full_content(full_path)
 
-        # Check persistence for path
-        fm = self.persistence.get_skill_meta(name)
-        if fm and fm.path:
-            full_path = Path(fm.path)
-            if full_path.exists():
-                content = load_full_content(full_path)
-                self._content_cache[name] = content
-                return content
+            # Scan filesystem
+            if content is None:
+                for scope in SkillScope:
+                    scope_path = self.skills_root / _scope_dir(scope)
+                    # Directory-style
+                    skill_md = scope_path / name / "SKILL.md"
+                    if skill_md.exists():
+                        content = load_full_content(skill_md)
+                        break
+                    # File-style
+                    file_md = scope_path / f"{name}.md"
+                    if file_md.exists():
+                        content = load_full_content(file_md)
+                        break
 
-        # Scan filesystem
-        for scope in SkillScope:
-            scope_path = self.skills_root / _scope_dir(scope)
-            # Directory-style
-            skill_dir = scope_path / name
-            skill_md = skill_dir / "SKILL.md"
-            if skill_md.exists():
-                content = load_full_content(skill_md)
-                self._content_cache[name] = content
-                return content
-            # File-style
-            file_md = scope_path / f"{name}.md"
-            if file_md.exists():
-                content = load_full_content(file_md)
-                self._content_cache[name] = content
-                return content
+        if content is None:
+            logger.warning(f"[SkillManager] skill not found: {name}")
+            return None
 
-        logger.warning(f"[SkillManager] skill not found: {name}")
-        return None
+        self._content_cache[name] = content
+        # 命中即记录：命中次数/最近命中时间 = 元记忆
+        self.persistence.record_usage(name)
+        # 归档的 skill 被重新加载 → 视为「又热了」，恢复到原 scope
+        self.restore_skill(name)
+        return content
 
     def get_frontmatter(self, name: str) -> Optional[SkillFrontmatter]:
         """Get frontmatter for a single skill (without loading the body)."""
@@ -757,6 +772,52 @@ class SkillManager:
 
         logger.info(f"[SkillManager] assigned {name}: {old_scope.value} → {target_scope.value}")
         return True
+
+    # ── Offline Memory（离线 memory / 做梦）─────────────────────
+
+    def archive_skill(self, name: str) -> bool:
+        """把低频 skill 归档到 ARCHIVED scope（外置记忆）。
+
+        归档后不再参与默认发现（list_frontmatters 默认过滤 ARCHIVED），
+        但仍保留在持久化里，可被语义检索或显式 restore 找回。
+        """
+        fm = self.persistence.get_skill_meta(name)
+        if fm is None:
+            logger.warning(f"[SkillManager] archive: skill not found '{name}'")
+            return False
+        if fm.scope == SkillScope.ARCHIVED:
+            return True
+
+        fm.archived_from = fm.scope.value
+        fm.scope = SkillScope.ARCHIVED
+        fm.updated_at = datetime.now().isoformat()
+        self.persistence.store_skill(fm)
+        logger.info(
+            f"[SkillManager] archived {name}: {fm.archived_from} → archived "
+            f"(hit_count={fm.hit_count}, last_hit={fm.last_hit_at})"
+        )
+        return True
+
+    def restore_skill(self, name: str) -> bool:
+        """把归档的 skill 恢复到原 scope（archived_from 或 USER）。
+
+        load_full_skill 命中归档 skill 时自动调用，实现「低频 → 高频」回升。
+        """
+        fm = self.persistence.get_skill_meta(name)
+        if fm is None or fm.scope != SkillScope.ARCHIVED:
+            return False
+
+        target = SkillScope(fm.archived_from) if fm.archived_from else SkillScope.USER
+        fm.scope = target
+        fm.archived_from = ""
+        fm.updated_at = datetime.now().isoformat()
+        self.persistence.store_skill(fm)
+        logger.info(f"[SkillManager] restored {name}: archived → {target.value}")
+        return True
+
+    def record_usage(self, name: str) -> bool:
+        """透传：记录一次 skill 命中（供外部/工具层直接调用）。"""
+        return self.persistence.record_usage(name)
 
     async def search_skills(
         self, query: str, top_k: int = 5, scope: str = None,

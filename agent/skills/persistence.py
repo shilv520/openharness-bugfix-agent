@@ -115,6 +115,7 @@ class SkillPersistence:
 
         # Fallback in-memory store
         self._fallback: Dict[str, SkillFrontmatter] = {}
+        self._memory_fallback: Dict[str, Dict] = {}
 
     @property
     def is_ready(self) -> bool:
@@ -154,6 +155,9 @@ class SkillPersistence:
                     "path": fm.path,
                     "created_at": fm.created_at,
                     "updated_at": fm.updated_at,
+                    "hit_count": fm.hit_count,
+                    "last_hit_at": fm.last_hit_at,
+                    "archived_from": fm.archived_from,
                 }
                 self._redis.hset(self._redis_key_meta(name), mapping=meta)
                 self._redis.sadd(self._redis_key_scope(fm.scope.value), name)
@@ -181,6 +185,9 @@ class SkillPersistence:
                         "tags": json.dumps(fm.tags),
                         "checksum": fm.checksum,
                         "created_at": fm.created_at,
+                        "hit_count": fm.hit_count,
+                        "last_hit_at": fm.last_hit_at,
+                        "archived_from": fm.archived_from,
                     }],
                 )
                 logger.info(f"[SkillPersist] ChromaDB indexed: {name}")
@@ -222,6 +229,9 @@ class SkillPersistence:
                         path=data.get("path", ""),
                         created_at=data.get("created_at", ""),
                         updated_at=data.get("updated_at", ""),
+                        hit_count=int(data.get("hit_count", 0) or 0),
+                        last_hit_at=data.get("last_hit_at", ""),
+                        archived_from=data.get("archived_from", ""),
                     )
             except Exception as e:
                 logger.warning(f"[SkillPersist] Redis get failed for {name}: {e}")
@@ -360,6 +370,72 @@ class SkillPersistence:
         self._fallback.pop(name, None)
         logger.info(f"[SkillPersist] deleted: {name}")
         return True
+
+    # ── Usage Stats（统计机制 = memory）─────────────────────────
+
+    def record_usage(self, name: str) -> bool:
+        """记录一次 skill 命中（hit_count += 1，更新 last_hit_at）。
+
+        这是「统计机制 = memory」的落点：命中次数与最近命中时间是
+        关于 skill 的元记忆，由离线 dream 机制消费，驱动高频/低频升降级。
+        """
+        now = datetime.now().isoformat()
+        if self._redis:
+            try:
+                key = self._redis_key_meta(name)
+                if not self._redis.exists(key):
+                    return False
+                self._redis.hincrby(key, "hit_count", 1)
+                self._redis.hset(key, "last_hit_at", now)
+                return True
+            except Exception as e:
+                logger.warning(f"[SkillPersist] record_usage Redis failed: {e}")
+
+        # Fallback
+        fm = self._fallback.get(name)
+        if fm is None:
+            return False
+        fm.hit_count += 1
+        fm.last_hit_at = now
+        return True
+
+    def get_usage(self, name: str) -> Dict:
+        """Return {hit_count, last_hit_at} for a skill."""
+        fm = self.get_skill_meta(name)
+        if fm is None:
+            return {"hit_count": 0, "last_hit_at": ""}
+        return {"hit_count": fm.hit_count, "last_hit_at": fm.last_hit_at}
+
+    # ── Generic Memory Store（用 memory 兜底）──────────────────
+
+    def store_memory(self, key: str, value: Dict) -> bool:
+        """Store a memory blob (JSON) keyed by name. Used for dream 报告等。
+
+        这是「用 memory 兜底」的通用入口：离线 dream 的归档决策写到这里，
+        跨会话可查、可审计、可回滚。
+        """
+        data = json.dumps(value)
+        if self._redis:
+            try:
+                self._redis.set(f"skill:memory:{key}", data)
+                return True
+            except Exception as e:
+                logger.warning(f"[SkillPersist] store_memory Redis failed: {e}")
+
+        self._memory_fallback[key] = value
+        return True
+
+    def get_memory(self, key: str) -> Optional[Dict]:
+        """Read a memory blob by key."""
+        if self._redis:
+            try:
+                data = self._redis.get(f"skill:memory:{key}")
+                if data:
+                    return json.loads(data)
+            except Exception as e:
+                logger.warning(f"[SkillPersist] get_memory Redis failed: {e}")
+
+        return self._memory_fallback.get(key)
 
     # ── Seed / Bulk Load ────────────────────────────────────────
 
