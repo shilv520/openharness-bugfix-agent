@@ -533,6 +533,104 @@ async def _llm_classify_task(
         return None
 
 
+async def _call_llm_text(prompt: str, max_tokens: int = 2000) -> str:
+    """调用 LLM 返回纯文本（供 Discussion/Feedback 协议使用）。"""
+    api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("DEEPSEEK_API_KEY")
+    if not api_key:
+        return "模拟结果"
+    base_url = os.environ.get("OPENAI_BASE_URL", "https://api.deepseek.com/v1").rstrip("/")
+    model = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
+    try:
+        import httpx
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            resp = await client.post(
+                f"{base_url}/chat/completions",
+                headers={"Authorization": f"Bearer {api_key}"},
+                json={
+                    "model": model,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "temperature": 0.3,
+                    "max_tokens": max_tokens,
+                },
+            )
+            if resp.status_code == 200:
+                return resp.json()["choices"][0]["message"]["content"]
+            return f"API错误: {resp.status_code}"
+    except Exception as e:
+        return f"调用失败: {str(e)}"
+
+
+async def _run_discussion(session_id: str, results: Dict, pipeline_ctx: Dict, comm_bus) -> Optional[Dict]:
+    """Reviewer ↔ Analyzer 讨论共识（Bug 真假判定），把共识注入下游上下文。"""
+    from agent.communication import DiscussionProtocol
+    try:
+        reviewer_view = (results["code-reviewer"].report or "")[:500]
+        disc = DiscussionProtocol(comm_bus, _call_llm_text)
+        disc_result = await disc.discuss(
+            agent1="code-reviewer",
+            agent2="bug-analyzer",
+            topic="Bug 真假判定",
+            initial_data={"agent1_view": reviewer_view},
+        )
+        pipeline_ctx["discussion_consensus"] = disc_result.get("consensus", {})
+        logger.info(
+            f"[Pipeline:{session_id}] Discussion agreed={disc_result.get('agreed')} "
+            f"rounds={disc_result.get('rounds')}"
+        )
+        return disc_result
+    except Exception as e:
+        logger.warning(f"[Pipeline:{session_id}] Discussion failed: {e}")
+        return None
+
+
+async def _run_feedback_loop(session_id: str, results: Dict, pipeline_ctx: Dict, comm_bus):
+    """Fixer ↔ Validator 反馈循环（验证 + 打回重改），返回 validator 的 SubAgentResult。"""
+    from agent.communication import FeedbackProtocol
+    from agent.delegation.sub_agent import SubAgentResult
+    fixer_report = (results["code-fixer"].report or "")[:500]
+    start = time.time()
+    fb = FeedbackProtocol(comm_bus, _call_llm_text)
+    fb_result = await fb.feedback_loop(
+        fixer="code-fixer",
+        validator="test-validator",
+        initial_patch={"patch": fixer_report, "fixed_code": fixer_report},
+    )
+    results["feedback_loop"] = fb_result
+    passed = bool(fb_result.get("success"))
+    end = time.time()
+    result = SubAgentResult(
+        agent_type="test-validator",
+        task_id=session_id,
+        success=passed,
+        report=json.dumps(fb_result.get("final_patch", {}), ensure_ascii=False)[:800],
+        structured_output={"feedback_loop": fb_result},
+        steps=[],
+        start_time=start,
+        end_time=end,
+    )
+    pipeline_ctx["feedback_loop"] = fb_result
+    logger.info(
+        f"[Pipeline:{session_id}] Feedback loop success={passed} "
+        f"iterations={fb_result.get('iterations')}"
+    )
+    return result
+
+
+def _discussion_payload(results: Dict, fallback: str) -> Dict:
+    """把真实 Discussion 结果转成前端共识字段（不再硬编码 agreed=True）。"""
+    disc = results.get("discussion")
+    if not isinstance(disc, dict):
+        return {"agreed": True, "consensus": fallback[:300]}
+    consensus = disc.get("consensus", fallback)
+    if not isinstance(consensus, str):
+        consensus = json.dumps(consensus, ensure_ascii=False)
+    return {
+        "agreed": bool(disc.get("agreed", True)),
+        "consensus": consensus[:300],
+        "rounds": disc.get("rounds", 0),
+    }
+
+
 # ═══════════════════════════════════════════════════════════════
 # Core: Bug Fix Pipeline (orchestrates all components)
 # ═══════════════════════════════════════════════════════════════
@@ -551,6 +649,7 @@ async def _run_full_pipeline(
     hitl = comp["hitl"]
     tp = comp["tp"]
     registry = comp["registry"]
+    comm_bus = comp["comm_bus"]
     memory = comp["memory"]
     workspace = comp["workspace"]
     skill_manager = comp.get("skill_manager")
@@ -620,43 +719,88 @@ async def _run_full_pipeline(
         logger.info(f"[Pipeline:{session_id}] Step {i+1}/{len(agent_plan)}: {agent_name}")
         await tp.update_todo(plan.plan_id, i, status="in_progress")
 
+        # ── 协作协议 1：Reviewer ↔ Analyzer 讨论共识（Bug 真假判定） ──
+        if agent_name == "bug-analyzer" and "code-reviewer" in results:
+            disc_result = await _run_discussion(session_id, results, pipeline_ctx, comm_bus)
+            if disc_result is not None:
+                results["discussion"] = disc_result
+
         # HITL 检查: 是否需要在此步骤前中断
         if agent_name in hitl.get_interrupt_before_nodes():
             logger.info(f"[Pipeline:{session_id}] HITL interrupt before: {agent_name}")
             # 记录打断（异步模式下通过 HITL API 恢复）
 
-        # ── 动态加载匹配的 Skill ──
-        extra_skills = {}
-        if skill_manager and skill_router and agent_name in skill_assignments:
-            for skill_name in skill_assignments.get(agent_name, []):
-                content = skill_manager.load_full_skill(skill_name)
-                if content:
-                    extra_skills[skill_name] = content
-                    logger.info(
-                        f"[Pipeline:{session_id}] {agent_name} ← 动态加载 Skill: {skill_name}"
-                    )
+        # ── 协作协议 2：Fixer ↔ Validator 反馈循环（验证 + 打回重改，替换独立验证） ──
+        use_feedback = (agent_name == "test-validator" and "code-fixer" in results)
 
-        # ── 构建 Agent 可调用的 Skill 管理工具 ──
-        from agent.skills.tools import SkillToolsHandler, build_skill_tools_for_agent
-        skill_handler = SkillToolsHandler(skill_manager)
-        skill_tools = build_skill_tools_for_agent(skill_handler)
+        if use_feedback:
+            result = await _run_feedback_loop(session_id, results, pipeline_ctx, comm_bus)
+            results[agent_name] = result
+        else:
+            # ── 动态加载匹配的 Skill ──
+            extra_skills = {}
+            if skill_manager and skill_router and agent_name in skill_assignments:
+                for skill_name in skill_assignments.get(agent_name, []):
+                    content = skill_manager.load_full_skill(skill_name)
+                    if content:
+                        extra_skills[skill_name] = content
+                        logger.info(
+                            f"[Pipeline:{session_id}] {agent_name} ← 动态加载 Skill: {skill_name}"
+                        )
 
-        # 创建 SubAgent（带上下文隔离 + 动态 Skill + Skill 管理工具）
-        sub = SubAgent(
-            definition=registry.get(agent_name),
-            task_prompt=task,
-            context={**pipeline_ctx, "step_index": i, "total_steps": len(agent_plan)},
-            isolation=iso,
-            parent_boundary=root,
-            compressor=compressor,
-            max_iterations=2,
-            tools=skill_tools,
-            extra_skills=extra_skills,
-        )
+            # ── 构建 Agent 可调用的 Skill 管理工具 ──
+            from agent.skills.tools import SkillToolsHandler, build_skill_tools_for_agent
+            skill_handler = SkillToolsHandler(skill_manager)
+            skill_tools = build_skill_tools_for_agent(skill_handler)
 
-        # 执行
-        result = await sub.run()
-        results[agent_name] = result
+            # 创建 SubAgent（带上下文隔离 + 动态 Skill + Skill 管理工具）
+            sub = SubAgent(
+                definition=registry.get(agent_name),
+                task_prompt=task,
+                context={**pipeline_ctx, "step_index": i, "total_steps": len(agent_plan)},
+                isolation=iso,
+                parent_boundary=root,
+                compressor=compressor,
+                max_iterations=2,
+                tools=skill_tools,
+                extra_skills=extra_skills,
+            )
+
+            # 执行
+            result = await sub.run()
+            results[agent_name] = result
+
+        # ── 实时 Skill 分配更新：Agent 新建/更新了 Skill → 下游立即可用 ──
+        if result.success and skill_manager and skill_router:
+            for step in result.steps:
+                action = step.get("action", "")
+                action_detail = step.get("action_detail", "")
+                # 从 ReAct 步骤中检测 create_skill / update_skill 调用
+                if action in ("create_skill", "update_skill"):
+                    # 从 action_detail 或 step result 中提取 skill_name
+                    step_result = step.get("result", {})
+                    if isinstance(step_result, dict) and step_result.get("success"):
+                        skill_data = step_result.get("skill", {})
+                        skill_name = skill_data.get("name", "")
+                    else:
+                        # 回退：从 action_detail 中解析
+                        import re as _re
+                        m = _re.search(r"['\"]?name['\"]?\s*[:=]\s*['\"]([^'\"]+)", str(action_detail))
+                        skill_name = m.group(1) if m else ""
+                    if skill_name:
+                        fm = skill_manager.get_frontmatter(skill_name)
+                        if fm:
+                            matched = await skill_router.route(fm)
+                            new_assignments = []
+                            for a in matched.agents:
+                                if skill_name not in skill_assignments.get(a, []):
+                                    skill_assignments.setdefault(a, []).append(skill_name)
+                                    new_assignments.append(a)
+                            if new_assignments:
+                                logger.info(
+                                    f"[Pipeline:{session_id}] 实时分配: "
+                                    f"'{skill_name}' → {new_assignments}"
+                                )
 
         # 轨迹记录
         traj_store.record_think(session_id, agent_name, {
@@ -764,7 +908,7 @@ async def _run_full_pipeline(
             "candidates": [{"location": code_path, "type": "bug", "severity": "HIGH", "description": review_report[:200]}],
             "code_quality": "needs_fix",
         },
-        "discussion": {"agreed": True, "consensus": analysis_report[:300]},
+        "discussion": _discussion_payload(results, analysis_report),
         "analysis": {
             "bug_location": code_path,
             "bug_type": "bug",
@@ -847,6 +991,47 @@ async def submit_bug(
     }
 
 
+# ── 离线 memory（做梦）触发 ─────────────────────────────────────
+
+_last_dream_date: Optional[str] = None
+
+
+async def _maybe_run_dream(force: bool = False):
+    """每日任务结束后触发一次离线「做梦」整理。
+
+    对应 Simon Zheng 的指导：统计机制 = memory，触发时机 = 每日任务结束后。
+    - 低频 skill 归档到 ARCHIVED（外置记忆，不参与默认发现）
+    - 归档后重新变热的 skill 恢复到原 scope
+    - 每天只跑一次（用 Redis/in-memory 记录上次日期，跨重启不重复）
+    - force=True 时跳过日期守卫（手动触发/调试用）
+    """
+    global _last_dream_date
+    today = datetime.now().strftime("%Y-%m-%d")
+    if not force:
+        if _last_dream_date == today:
+            return None
+        if _kv_get("skill:dream:meta", "last_date") == today:
+            _last_dream_date = today
+            return None
+
+    from agent.skills.offline_memory import SkillDreamer
+    try:
+        comps = await _init_components()
+        mgr = comps.get("skill_manager")
+        if mgr is None:
+            return None
+        # dream 涉及同步 Redis 读，放线程池避免阻塞事件循环
+        report = await asyncio.to_thread(SkillDreamer(mgr).dream)
+        _kv_set("skill:dream:meta", "last_date", today)
+        _kv_set("skill:dream:meta", "last_summary", report["summary"])
+        _last_dream_date = today
+        logger.info(f"[Dream] {report['summary']}")
+        return report
+    except Exception as e:
+        logger.warning(f"[Dream] skipped: {e}")
+        return None
+
+
 async def _execute_task_async(task_id: str, session_id: str, bug: BugSubmitRequest):
     """后台执行任务并更新状态"""
     try:
@@ -892,6 +1077,9 @@ async def _execute_task_async(task_id: str, session_id: str, bug: BugSubmitReque
         logger.exception(f"[Task:{task_id}] Failed: {e}")
         _kv_set(f"task:{task_id}", "status", "failed")
         _kv_set(f"task:{task_id}", "error", str(e))
+    finally:
+        # 任务结束（无论成败）→ 触发离线做梦整理
+        await _maybe_run_dream()
 
 
 @app.post("/api/bug/submit-sync")
@@ -929,6 +1117,7 @@ async def submit_bug_sync(
         _kv_set(f"task:{task_id}", "total_steps", str(result.get("total_steps", 0)))
         _kv_set(f"task:{task_id}", "steps", json.dumps(result.get("steps", []), ensure_ascii=False))
         _kv_set(f"task:{task_id}", "full_result", json.dumps(result, ensure_ascii=False, default=str))
+        await _maybe_run_dream()
         return result
     except Exception as e:
         logger.exception(f"[Task:{task_id}] Failed")
@@ -1212,6 +1401,24 @@ async def system_stats():
             "pending_approvals": len(getattr(hitl, '_pending_approvals', {})),
         },
     }
+
+
+# ── 离线 memory（做梦）──
+
+@app.post("/api/skills/dream")
+async def trigger_dream(force: bool = False):
+    """手动触发一次离线「做梦」整理。
+
+    默认走每日守卫（今天已跑过则跳过）；force=true 强制重跑，用于调试。
+    """
+    report = await _maybe_run_dream(force=force)
+    if report is None:
+        return {
+            "status": "already_run_today",
+            "hint": "pass force=true to re-run",
+            "last_summary": _kv_get("skill:dream:meta", "last_summary"),
+        }
+    return {"status": "ok", **report}
 
 
 # ── SPA 托管 ────────────────────────────────────────────────────
