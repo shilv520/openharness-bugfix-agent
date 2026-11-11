@@ -1,0 +1,2012 @@
+{
+  "meta": {
+    "created": "2026-11-02",
+    "seed": 42,
+    "projects": [
+      "Lang",
+      "Time",
+      "Chart"
+    ],
+    "d4j_home": "D:\\LangGraph + LiveKit\\openharness-bugfix-agent\\data\\defects4j",
+    "counts": {
+      "train": 72,
+      "val": 14,
+      "test": 27
+    },
+    "lock_notice": "test split 的官方 src.patch 永不进入任何训练数据；split 一经下游使用不再变更"
+  },
+  "train": [
+    {
+      "bug_id": "Chart-10",
+      "project": "Chart",
+      "vid": 10,
+      "jira": "UNKNOWN",
+      "buggy_rev": "1064",
+      "fixed_rev": "1065",
+      "trigger_tests": [
+        "org.jfree.chart.imagemap.junit.StandardToolTipTagFragmentGeneratorTests::testGenerateURLFragment"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.chart.imagemap.StandardToolTipTagFragmentGenerator"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/10.src.patch"
+    },
+    {
+      "bug_id": "Chart-11",
+      "project": "Chart",
+      "vid": 11,
+      "jira": "868",
+      "buggy_rev": "1024",
+      "fixed_rev": "1025",
+      "trigger_tests": [
+        "org.jfree.chart.util.junit.ShapeUtilitiesTests::testEqualGeneralPaths"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.chart.util.ShapeUtilities"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/11.src.patch"
+    },
+    {
+      "bug_id": "Chart-12",
+      "project": "Chart",
+      "vid": 12,
+      "jira": "213",
+      "buggy_rev": "846",
+      "fixed_rev": "852",
+      "trigger_tests": [
+        "org.jfree.chart.plot.junit.MultiplePiePlotTests::testConstructor"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.chart.plot.MultiplePiePlot"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/12.src.patch"
+    },
+    {
+      "bug_id": "Chart-13",
+      "project": "Chart",
+      "vid": 13,
+      "jira": "UNKNOWN",
+      "buggy_rev": "817",
+      "fixed_rev": "822",
+      "trigger_tests": [
+        "org.jfree.chart.block.junit.BorderArrangementTests::testSizingWithWidthConstraint"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.chart.block.BorderArrangement"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/13.src.patch"
+    },
+    {
+      "bug_id": "Chart-14",
+      "project": "Chart",
+      "vid": 14,
+      "jira": "UNKNOWN",
+      "buggy_rev": "809",
+      "fixed_rev": "811",
+      "trigger_tests": [
+        "org.jfree.chart.plot.junit.CategoryPlotTests::testRemoveRangeMarker",
+        "org.jfree.chart.plot.junit.CategoryPlotTests::testRemoveDomainMarker",
+        "org.jfree.chart.plot.junit.XYPlotTests::testRemoveRangeMarker",
+        "org.jfree.chart.plot.junit.XYPlotTests::testRemoveDomainMarker"
+      ],
+      "n_trigger": 4,
+      "modified_classes": [
+        "org.jfree.chart.plot.CategoryPlot",
+        "org.jfree.chart.plot.XYPlot"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/14.src.patch"
+    },
+    {
+      "bug_id": "Chart-15",
+      "project": "Chart",
+      "vid": 15,
+      "jira": "UNKNOWN",
+      "buggy_rev": "747",
+      "fixed_rev": "749",
+      "trigger_tests": [
+        "org.jfree.chart.plot.junit.PiePlot3DTests::testDrawWithNullDataset"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.chart.plot.PiePlot"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/15.src.patch"
+    },
+    {
+      "bug_id": "Chart-16",
+      "project": "Chart",
+      "vid": 16,
+      "jira": "834",
+      "buggy_rev": "741",
+      "fixed_rev": "743",
+      "trigger_tests": [
+        "org.jfree.data.category.junit.DefaultIntervalCategoryDatasetTests::testGetCategoryIndex",
+        "org.jfree.data.category.junit.DefaultIntervalCategoryDatasetTests::testSetCategoryKeys",
+        "org.jfree.data.category.junit.DefaultIntervalCategoryDatasetTests::testGetSeriesIndex",
+        "org.jfree.data.category.junit.DefaultIntervalCategoryDatasetTests::testGetRowCount",
+        "org.jfree.data.category.junit.DefaultIntervalCategoryDatasetTests::testGetRowIndex",
+        "org.jfree.data.category.junit.DefaultIntervalCategoryDatasetTests::testGetColumnCount",
+        "org.jfree.data.category.junit.DefaultIntervalCategoryDatasetTests::testGetColumnIndex",
+        "org.jfree.data.category.junit.DefaultIntervalCategoryDatasetTests::testCloning2"
+      ],
+      "n_trigger": 8,
+      "modified_classes": [
+        "org.jfree.data.category.DefaultIntervalCategoryDataset"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/16.src.patch"
+    },
+    {
+      "bug_id": "Chart-17",
+      "project": "Chart",
+      "vid": 17,
+      "jira": "803",
+      "buggy_rev": "621",
+      "fixed_rev": "622",
+      "trigger_tests": [
+        "org.jfree.data.time.junit.TimeSeriesTests::testBug1832432"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.data.time.TimeSeries"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/17.src.patch"
+    },
+    {
+      "bug_id": "Chart-19",
+      "project": "Chart",
+      "vid": 19,
+      "jira": "UNKNOWN",
+      "buggy_rev": "430",
+      "fixed_rev": "434",
+      "trigger_tests": [
+        "org.jfree.chart.plot.junit.CategoryPlotTests::testGetRangeAxisIndex",
+        "org.jfree.chart.plot.junit.CategoryPlotTests::testGetDomainAxisIndex"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.jfree.chart.plot.CategoryPlot"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/19.src.patch"
+    },
+    {
+      "bug_id": "Chart-2",
+      "project": "Chart",
+      "vid": 2,
+      "jira": "959",
+      "buggy_rev": "2240",
+      "fixed_rev": "2242",
+      "trigger_tests": [
+        "org.jfree.data.general.junit.DatasetUtilitiesTests::testBug2849731_2",
+        "org.jfree.data.general.junit.DatasetUtilitiesTests::testBug2849731_3"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.jfree.data.general.DatasetUtilities"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/2.src.patch"
+    },
+    {
+      "bug_id": "Chart-20",
+      "project": "Chart",
+      "vid": 20,
+      "jira": "UNKNOWN",
+      "buggy_rev": "281",
+      "fixed_rev": "283",
+      "trigger_tests": [
+        "org.jfree.chart.plot.junit.ValueMarkerTests::test1808376"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.chart.plot.ValueMarker"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/20.src.patch"
+    },
+    {
+      "bug_id": "Chart-23",
+      "project": "Chart",
+      "vid": 23,
+      "jira": "UNKNOWN",
+      "buggy_rev": "209",
+      "fixed_rev": "210",
+      "trigger_tests": [
+        "org.jfree.chart.renderer.category.junit.MinMaxCategoryRendererTests::testEquals"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.chart.renderer.category.MinMaxCategoryRenderer"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/23.src.patch"
+    },
+    {
+      "bug_id": "Chart-24",
+      "project": "Chart",
+      "vid": 24,
+      "jira": "UNKNOWN",
+      "buggy_rev": "188",
+      "fixed_rev": "190",
+      "trigger_tests": [
+        "org.jfree.chart.renderer.junit.GrayPaintScaleTests::testGetPaint"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.chart.renderer.GrayPaintScale"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/24.src.patch"
+    },
+    {
+      "bug_id": "Chart-26",
+      "project": "Chart",
+      "vid": 26,
+      "jira": "UNKNOWN",
+      "buggy_rev": "102",
+      "fixed_rev": "103",
+      "trigger_tests": [
+        "org.jfree.chart.junit.AreaChartTests::testDrawWithNullInfo",
+        "org.jfree.chart.junit.BarChart3DTests::testDrawWithNullInfo",
+        "org.jfree.chart.junit.BarChartTests::testDrawWithNullInfo",
+        "org.jfree.chart.junit.GanttChartTests::testDrawWithNullInfo",
+        "org.jfree.chart.junit.GanttChartTests::testDrawWithNullInfo2",
+        "org.jfree.chart.junit.LineChart3DTests::testDrawWithNullInfo",
+        "org.jfree.chart.junit.LineChartTests::testDrawWithNullInfo",
+        "org.jfree.chart.junit.StackedAreaChartTests::testDrawWithNullInfo",
+        "org.jfree.chart.junit.StackedBarChart3DTests::testDrawWithNullInfo",
+        "org.jfree.chart.junit.StackedBarChartTests::testDrawWithNullInfo",
+        "org.jfree.chart.junit.WaterfallChartTests::testDrawWithNullInfo",
+        "org.jfree.chart.plot.junit.CategoryPlotTests::test1654215",
+        "org.jfree.chart.plot.junit.CategoryPlotTests::testSerialization3",
+        "org.jfree.chart.plot.junit.CategoryPlotTests::testSerialization4",
+        "org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests::testDrawWithNullInfo",
+        "org.jfree.chart.renderer.category.junit.GroupedStackedBarRendererTests::testDrawWithNullInfo",
+        "org.jfree.chart.renderer.category.junit.IntervalBarRendererTests::testDrawWithNullInfo",
+        "org.jfree.chart.renderer.category.junit.LayeredBarRendererTests::testDrawWithNullInfo",
+        "org.jfree.chart.renderer.category.junit.LevelRendererTests::testDrawWithNullInfo",
+        "org.jfree.chart.renderer.category.junit.MinMaxCategoryRendererTests::testDrawWithNullInfo",
+        "org.jfree.chart.renderer.category.junit.StatisticalBarRendererTests::testDrawWithNullInfo",
+        "org.jfree.chart.renderer.category.junit.StatisticalLineAndShapeRendererTests::testDrawWithNullInfo"
+      ],
+      "n_trigger": 22,
+      "modified_classes": [
+        "org.jfree.chart.axis.Axis"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/26.src.patch"
+    },
+    {
+      "bug_id": "Chart-3",
+      "project": "Chart",
+      "vid": 3,
+      "jira": "UNKNOWN",
+      "buggy_rev": "2225",
+      "fixed_rev": "2227",
+      "trigger_tests": [
+        "org.jfree.data.time.junit.TimeSeriesTests::testCreateCopy3"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.data.time.TimeSeries"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/3.src.patch"
+    },
+    {
+      "bug_id": "Chart-6",
+      "project": "Chart",
+      "vid": 6,
+      "jira": "UNKNOWN",
+      "buggy_rev": "1164",
+      "fixed_rev": "1166",
+      "trigger_tests": [
+        "org.jfree.chart.util.junit.ShapeListTests::testSerialization",
+        "org.jfree.chart.util.junit.ShapeListTests::testEquals"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.jfree.chart.util.ShapeList"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/6.src.patch"
+    },
+    {
+      "bug_id": "Chart-7",
+      "project": "Chart",
+      "vid": 7,
+      "jira": "UNKNOWN",
+      "buggy_rev": "1086",
+      "fixed_rev": "1087",
+      "trigger_tests": [
+        "org.jfree.data.time.junit.TimePeriodValuesTests::testGetMaxMiddleIndex"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.data.time.TimePeriodValues"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/7.src.patch"
+    },
+    {
+      "bug_id": "Lang-10",
+      "project": "Lang",
+      "vid": 10,
+      "jira": "LANG-831",
+      "buggy_rev": "192b1e1b6b96da05cb000b2c89b71467cbfaf245",
+      "fixed_rev": "ad72b9f2bf37bd61af18bde67c1622d90a5d8766",
+      "trigger_tests": [
+        "org.apache.commons.lang3.time.FastDateFormat_ParserTest::testLANG_831",
+        "org.apache.commons.lang3.time.FastDateParserTest::testLANG_831"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.apache.commons.lang3.time.FastDateParser"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/10.src.patch"
+    },
+    {
+      "bug_id": "Lang-13",
+      "project": "Lang",
+      "vid": 13,
+      "jira": "LANG-788",
+      "buggy_rev": "81797ed4402a982f90bd903c7437aeea4e3933f5",
+      "fixed_rev": "e9429c05e1a4797383fb405928088d2f8563ff97",
+      "trigger_tests": [
+        "org.apache.commons.lang3.SerializationUtilsTest::testPrimitiveTypeClassSerialization"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.SerializationUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/13.src.patch"
+    },
+    {
+      "bug_id": "Lang-14",
+      "project": "Lang",
+      "vid": 14,
+      "jira": "LANG-786",
+      "buggy_rev": "a31570673477b8d8f4f0f2429002ec219e83369f",
+      "fixed_rev": "dfa6882a3b9ae6d17c386312ad5e5902d852fb4e",
+      "trigger_tests": [
+        "org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testEquals"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.StringUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/14.src.patch"
+    },
+    {
+      "bug_id": "Lang-16",
+      "project": "Lang",
+      "vid": 16,
+      "jira": "LANG-746",
+      "buggy_rev": "c98fbe27b2822e669461a061ee916e7ce5bf188f",
+      "fixed_rev": "41326bf5266ecc6472bab28481b77cecd6f7fb5c",
+      "trigger_tests": [
+        "org.apache.commons.lang3.math.NumberUtilsTest::testCreateNumber"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.math.NumberUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/16.src.patch"
+    },
+    {
+      "bug_id": "Lang-17",
+      "project": "Lang",
+      "vid": 17,
+      "jira": "LANG-720",
+      "buggy_rev": "8a3e8603455c6dbfc595ab7a7e4a32f171a8b245",
+      "fixed_rev": "2c1b5be146585dc8b27aedebca959f92da19094e",
+      "trigger_tests": [
+        "org.apache.commons.lang3.StringEscapeUtilsTest::testLang720"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.text.translate.CharSequenceTranslator"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/17.src.patch"
+    },
+    {
+      "bug_id": "Lang-21",
+      "project": "Lang",
+      "vid": 21,
+      "jira": "LANG-677",
+      "buggy_rev": "a655a3fafbc535b09fa0596635d2c87cf48c428e",
+      "fixed_rev": "3e5d5dc9c0a5047152eedb802bc008ce78b8de0c",
+      "trigger_tests": [
+        "org.apache.commons.lang3.time.DateUtilsTest::testIsSameLocalTime_Cal"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.time.DateUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/21.src.patch"
+    },
+    {
+      "bug_id": "Lang-22",
+      "project": "Lang",
+      "vid": 22,
+      "jira": "LANG-662",
+      "buggy_rev": "7e8d044b7b8c6d2786a88f416d17eed2f472445c",
+      "fixed_rev": "2270d830fda743de1ce8a61e33b9542cb39a0f4b",
+      "trigger_tests": [
+        "org.apache.commons.lang3.math.FractionTest::testReducedFactory_int_int",
+        "org.apache.commons.lang3.math.FractionTest::testReduce"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.apache.commons.lang3.math.Fraction"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/22.src.patch"
+    },
+    {
+      "bug_id": "Lang-23",
+      "project": "Lang",
+      "vid": 23,
+      "jira": "LANG-636",
+      "buggy_rev": "66e42dc8b43d37ff011de69586f8e6764c4b3164",
+      "fixed_rev": "249788d799ca1c3964062bdc5c19a51ecc05c2f7",
+      "trigger_tests": [
+        "org.apache.commons.lang3.text.ExtendedMessageFormatTest::testEqualsHashcode"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.text.ExtendedMessageFormat"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/23.src.patch"
+    },
+    {
+      "bug_id": "Lang-27",
+      "project": "Lang",
+      "vid": 27,
+      "jira": "LANG-638",
+      "buggy_rev": "bbcba273ad4322e76a90bcb867cbea108134717c",
+      "fixed_rev": "50c1fdecb4ed33ec1bb0d449f294c299d5369701",
+      "trigger_tests": [
+        "org.apache.commons.lang3.math.NumberUtilsTest::testCreateNumber"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.math.NumberUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/27.src.patch"
+    },
+    {
+      "bug_id": "Lang-29",
+      "project": "Lang",
+      "vid": 29,
+      "jira": "LANG-624",
+      "buggy_rev": "2d9a9ae59fd3b753e05903f63641eff1203f1bd1",
+      "fixed_rev": "eb79f7c6f37d0d9c4d9252b1020bc19a617a4d23",
+      "trigger_tests": [
+        "org.apache.commons.lang3.SystemUtilsTest::testJavaVersionAsInt"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.SystemUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/29.src.patch"
+    },
+    {
+      "bug_id": "Lang-3",
+      "project": "Lang",
+      "vid": 3,
+      "jira": "LANG-693",
+      "buggy_rev": "64cfee77e333d0c31a0fde0abe6dac3d97b0f078",
+      "fixed_rev": "8a1042959df80c06dbfa83896594caa8e20ff9d6",
+      "trigger_tests": [
+        "org.apache.commons.lang3.math.NumberUtilsTest::testStringCreateNumberEnsureNoPrecisionLoss"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.math.NumberUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/3.src.patch"
+    },
+    {
+      "bug_id": "Lang-30",
+      "project": "Lang",
+      "vid": 30,
+      "jira": "LANG-607",
+      "buggy_rev": "79f7a7ef529ae656a80f7e331f75e79999cef7ea",
+      "fixed_rev": "bc52782cd84f4356d2984e1aa01806f81754eb08",
+      "trigger_tests": [
+        "org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testContainsNone_CharArrayWithSupplementaryChars",
+        "org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testContainsNone_StringWithSupplementaryChars",
+        "org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testContainsAny_StringCharArrayWithBadSupplementaryChars",
+        "org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testIndexOfAnyBut_StringStringWithSupplementaryChars",
+        "org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testContainsAny_StringWithBadSupplementaryChars",
+        "org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testIndexOfAny_StringCharArrayWithSupplementaryChars",
+        "org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testIndexOfAnyBut_StringCharArrayWithSupplementaryChars",
+        "org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testContainsNone_StringWithBadSupplementaryChars",
+        "org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testIndexOfAny_StringStringWithSupplementaryChars",
+        "org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testContainsNone_CharArrayWithBadSupplementaryChars"
+      ],
+      "n_trigger": 10,
+      "modified_classes": [
+        "org.apache.commons.lang3.StringUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/30.src.patch"
+    },
+    {
+      "bug_id": "Lang-32",
+      "project": "Lang",
+      "vid": 32,
+      "jira": "LANG-586",
+      "buggy_rev": "2fb9e71da695f4ffc1d390209944399b12c53a5d",
+      "fixed_rev": "1f35e7c99b66b8d46c4ad96558e694a10aa38062",
+      "trigger_tests": [
+        "org.apache.commons.lang3.builder.HashCodeBuilderTest::testReflectionObjectCycle"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.builder.HashCodeBuilder"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/32.src.patch"
+    },
+    {
+      "bug_id": "Lang-33",
+      "project": "Lang",
+      "vid": 33,
+      "jira": "LANG-587",
+      "buggy_rev": "5d5a31a8274ff7e8219ee87fdd15b48c2184ccc0",
+      "fixed_rev": "8f675dd3cbfb8f552bdbbe1cfc646ba5b367983b",
+      "trigger_tests": [
+        "org.apache.commons.lang3.ClassUtilsTest::testToClass_object"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.ClassUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/33.src.patch"
+    },
+    {
+      "bug_id": "Lang-34",
+      "project": "Lang",
+      "vid": 34,
+      "jira": "LANG-586",
+      "buggy_rev": "5c3ec55e15922c58bb2f39145de9fe641840bb50",
+      "fixed_rev": "a2bb711aee6621b21cdd22e6d7e4bff2f7236235",
+      "trigger_tests": [
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testObjectCycle",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionHierarchy",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testSelfInstanceTwoVarsReflectionObjectCycle",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionArrayCycle",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionLongArrayArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionArrayArrayCycle",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionFloatArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionDoubleArrayArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionBooleanArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionyteArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionDoubleArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionIntArrayArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionLongArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionhortArrayArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionObjectArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionObjectCycle",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionBooleanArrayArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testSimpleReflectionObjectCycle",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionByteArrayArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionArrayCycleLevel2",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionArrayAndObjectCycle",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionCharArrayArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionShortArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testSelfInstanceVarReflectionObjectCycle",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionIntArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionCharArray",
+        "org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionFloatArrayArray"
+      ],
+      "n_trigger": 27,
+      "modified_classes": [
+        "org.apache.commons.lang3.builder.ToStringStyle"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/34.src.patch"
+    },
+    {
+      "bug_id": "Lang-35",
+      "project": "Lang",
+      "vid": 35,
+      "jira": "LANG-571",
+      "buggy_rev": "a5dc7f1e68f735d0f989a10c521bbc0f6c1ef3ae",
+      "fixed_rev": "54c0f6ba9e6555146d0dad51bcb5c4ec581e21da",
+      "trigger_tests": [
+        "org.apache.commons.lang3.ArrayUtilsAddTest::testLANG571"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.ArrayUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/35.src.patch"
+    },
+    {
+      "bug_id": "Lang-36",
+      "project": "Lang",
+      "vid": 36,
+      "jira": "LANG-521",
+      "buggy_rev": "506bd018b3ca638cd0c9d1bdad627f6468a05bee",
+      "fixed_rev": "26bc3fe010d5154d3ccac526ec22c429fc3af499",
+      "trigger_tests": [
+        "org.apache.commons.lang3.math.NumberUtilsTest::testCreateNumber",
+        "org.apache.commons.lang3.math.NumberUtilsTest::testIsNumber"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.apache.commons.lang3.math.NumberUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/36.src.patch"
+    },
+    {
+      "bug_id": "Lang-37",
+      "project": "Lang",
+      "vid": 37,
+      "jira": "LANG-567",
+      "buggy_rev": "eb2b517b466efb38d591be80728924fb22745333",
+      "fixed_rev": "2f8f67ab2939f1c23f09c8764e04ea2da0479332",
+      "trigger_tests": [
+        "org.apache.commons.lang3.ArrayUtilsAddTest::testJira567"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.ArrayUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/37.src.patch"
+    },
+    {
+      "bug_id": "Lang-38",
+      "project": "Lang",
+      "vid": 38,
+      "jira": "LANG-538",
+      "buggy_rev": "91ac16e0b4a74b437d86c2dd7a47272105b4317c",
+      "fixed_rev": "825481f019e4482e5ea74d5b0b5e5c438535cb68",
+      "trigger_tests": [
+        "org.apache.commons.lang3.time.FastDateFormatTest::testLang538"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.time.FastDateFormat"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/38.src.patch"
+    },
+    {
+      "bug_id": "Lang-39",
+      "project": "Lang",
+      "vid": 39,
+      "jira": "LANG-552",
+      "buggy_rev": "dafb8e85dcb76a299c6add11ecb62acf702d6c2a",
+      "fixed_rev": "56550bf2779990da78d2bac1d8287c8a693c6e4b",
+      "trigger_tests": [
+        "org.apache.commons.lang3.StringUtilsTest::testReplace_StringStringArrayStringArray"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.StringUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/39.src.patch"
+    },
+    {
+      "bug_id": "Lang-4",
+      "project": "Lang",
+      "vid": 4,
+      "jira": "LANG-882",
+      "buggy_rev": "cd91a4f2cd0ced1178e8fd1f49229196eb88094c",
+      "fixed_rev": "0cdc976684efcf478397b68c1d54cefc87bb92c9",
+      "trigger_tests": [
+        "org.apache.commons.lang3.text.translate.LookupTranslatorTest::testLang882"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.text.translate.LookupTranslator"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/4.src.patch"
+    },
+    {
+      "bug_id": "Lang-40",
+      "project": "Lang",
+      "vid": 40,
+      "jira": "LANG-432",
+      "buggy_rev": "7d3fbbfd43ec66fab190b29db9f7e157791de37f",
+      "fixed_rev": "711e204e73f24e32acb3727a5d9d3b351b6639d1",
+      "trigger_tests": [
+        "org.apache.commons.lang.StringUtilsEqualsIndexOfTest::testContainsIgnoreCase_LocaleIndependence"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.StringUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/40.src.patch"
+    },
+    {
+      "bug_id": "Lang-43",
+      "project": "Lang",
+      "vid": 43,
+      "jira": "LANG-477",
+      "buggy_rev": "eb8b39b145d863e8fca833c13479e466ad405c61",
+      "fixed_rev": "a38e2e942d622c1a84ed35bedb9aba045db7ab79",
+      "trigger_tests": [
+        "org.apache.commons.lang.text.ExtendedMessageFormatTest::testEscapedQuote_LANG_477"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.text.ExtendedMessageFormat"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/43.src.patch"
+    },
+    {
+      "bug_id": "Lang-44",
+      "project": "Lang",
+      "vid": 44,
+      "jira": "LANG-457",
+      "buggy_rev": "9d8846081ae80d36ca8da223dac2d1e116b0af33",
+      "fixed_rev": "0d0061f247b9c28b59b1af7e7a10def74718ac94",
+      "trigger_tests": [
+        "org.apache.commons.lang.NumberUtilsTest::testLang457"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.NumberUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/44.src.patch"
+    },
+    {
+      "bug_id": "Lang-46",
+      "project": "Lang",
+      "vid": 46,
+      "jira": "LANG-421",
+      "buggy_rev": "65b5dc69db3bfd08b4392dcee16fa0542b097812",
+      "fixed_rev": "dd0deed066e728d7b09e5fd69855c5ad7bf6bdb4",
+      "trigger_tests": [
+        "org.apache.commons.lang.StringEscapeUtilsTest::testEscapeJavaWithSlash"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.StringEscapeUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/46.src.patch"
+    },
+    {
+      "bug_id": "Lang-47",
+      "project": "Lang",
+      "vid": 47,
+      "jira": "LANG-412",
+      "buggy_rev": "2e8e3f46ba0a41d95c38875cf6a7153816262123",
+      "fixed_rev": "1fe5439baf32af2114958e3cfc3512bd72c84773",
+      "trigger_tests": [
+        "org.apache.commons.lang.text.StrBuilderTest::testLang412Left",
+        "org.apache.commons.lang.text.StrBuilderTest::testLang412Right"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.apache.commons.lang.text.StrBuilder"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/47.src.patch"
+    },
+    {
+      "bug_id": "Lang-5",
+      "project": "Lang",
+      "vid": 5,
+      "jira": "LANG-865",
+      "buggy_rev": "bc255ccf5c239666ab54e5a31720d3f482ae78eb",
+      "fixed_rev": "4d46f014fb8ee44386feb5fec52509f35d0e36ea",
+      "trigger_tests": [
+        "org.apache.commons.lang3.LocaleUtilsTest::testLang865"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.LocaleUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/5.src.patch"
+    },
+    {
+      "bug_id": "Lang-51",
+      "project": "Lang",
+      "vid": 51,
+      "jira": "LANG-365",
+      "buggy_rev": "9da40ba6b5bcc7b6071fa7fe11eaeb1b97e53d81",
+      "fixed_rev": "796b898281af571a510d96487dcd95699ac1e435",
+      "trigger_tests": [
+        "org.apache.commons.lang.BooleanUtilsTest::test_toBoolean_String"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.BooleanUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/51.src.patch"
+    },
+    {
+      "bug_id": "Lang-52",
+      "project": "Lang",
+      "vid": 52,
+      "jira": "LANG-363",
+      "buggy_rev": "ed7e9b43494e490a51c25c410b2950005fd685ea",
+      "fixed_rev": "c22d9d59e5b86c33f91d7fa93d71cdc514c2edd9",
+      "trigger_tests": [
+        "org.apache.commons.lang.StringEscapeUtilsTest::testEscapeJavaScript"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.StringEscapeUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/52.src.patch"
+    },
+    {
+      "bug_id": "Lang-54",
+      "project": "Lang",
+      "vid": 54,
+      "jira": "LANG-328",
+      "buggy_rev": "77a3c20bc0f30ca44f30aadad7f8ef0bc2528d0b",
+      "fixed_rev": "75d931a3264b73caa9cdd7d3373375cc33008ddf",
+      "trigger_tests": [
+        "org.apache.commons.lang.LocaleUtilsTest::testLang328"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.LocaleUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/54.src.patch"
+    },
+    {
+      "bug_id": "Lang-57",
+      "project": "Lang",
+      "vid": 57,
+      "jira": "LANG-304",
+      "buggy_rev": "848a8144bc42fddbbc466a38a897f5c09f0d49e2",
+      "fixed_rev": "cf20d13c64da51becd1351befe02a06144fd6fc1",
+      "trigger_tests": [
+        "org.apache.commons.lang.LocaleUtilsTest::testAvailableLocaleSet",
+        "org.apache.commons.lang.LocaleUtilsTest::testIsAvailableLocale",
+        "org.apache.commons.lang.LocaleUtilsTest::testAvailableLocaleList",
+        "org.apache.commons.lang.LocaleUtilsTest::testCountriesByLanguage",
+        "org.apache.commons.lang.LocaleUtilsTest::testLocaleLookupList_LocaleLocale",
+        "org.apache.commons.lang.LocaleUtilsTest::testLanguagesByCountry",
+        "org.apache.commons.lang.LocaleUtilsTest::testToLocale_1Part",
+        "org.apache.commons.lang.LocaleUtilsTest::testToLocale_2Part",
+        "org.apache.commons.lang.LocaleUtilsTest::testToLocale_3Part",
+        "org.apache.commons.lang.LocaleUtilsTest::testLocaleLookupList_Locale",
+        "org.apache.commons.lang.LocaleUtilsTest::testConstructor"
+      ],
+      "n_trigger": 11,
+      "modified_classes": [
+        "org.apache.commons.lang.LocaleUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/57.src.patch"
+    },
+    {
+      "bug_id": "Lang-58",
+      "project": "Lang",
+      "vid": 58,
+      "jira": "LANG-300",
+      "buggy_rev": "868dd284443b6f950a2f360b0422dbf09a599ae9",
+      "fixed_rev": "15360774099b2a7230e020751acdf6979b6e3f58",
+      "trigger_tests": [
+        "org.apache.commons.lang.math.NumberUtilsTest::testLang300"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.math.NumberUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/58.src.patch"
+    },
+    {
+      "bug_id": "Lang-59",
+      "project": "Lang",
+      "vid": 59,
+      "jira": "LANG-299",
+      "buggy_rev": "aaaa779108e445c028e91372a8c8709c7746cf72",
+      "fixed_rev": "9b0b19a9162ae8d217b06716962b982703ab4d1b",
+      "trigger_tests": [
+        "org.apache.commons.lang.text.StrBuilderAppendInsertTest::testLang299"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.text.StrBuilder"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/59.src.patch"
+    },
+    {
+      "bug_id": "Lang-6",
+      "project": "Lang",
+      "vid": 6,
+      "jira": "LANG-857",
+      "buggy_rev": "f5a83bb90cf7b318ac72823e6b99d01d060abe41",
+      "fixed_rev": "52bcd9b8e82d4d1d287b0d75df1e161aff8c65ab",
+      "trigger_tests": [
+        "org.apache.commons.lang3.StringUtilsTest::testEscapeSurrogatePairs"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.text.translate.CharSequenceTranslator"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/6.src.patch"
+    },
+    {
+      "bug_id": "Lang-61",
+      "project": "Lang",
+      "vid": 61,
+      "jira": "LANG-294",
+      "buggy_rev": "d8b6f5b5c6b92adff8965ab634b672e7b333f583",
+      "fixed_rev": "8e52e2169b20f7bc3c6c520d4f0c98e5bf06b076",
+      "trigger_tests": [
+        "org.apache.commons.lang.text.StrBuilderTest::testIndexOfLang294",
+        "org.apache.commons.lang.text.StrBuilderTest::testLang294"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.apache.commons.lang.text.StrBuilder"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/61.src.patch"
+    },
+    {
+      "bug_id": "Lang-62",
+      "project": "Lang",
+      "vid": 62,
+      "jira": "LANG-292",
+      "buggy_rev": "8fde2caf64c323eb0422f7547de14ca7b1ee7a54",
+      "fixed_rev": "d8b6f5b5c6b92adff8965ab634b672e7b333f583",
+      "trigger_tests": [
+        "org.apache.commons.lang.EntitiesTest::testNumberOverflow"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.Entities"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/62.src.patch"
+    },
+    {
+      "bug_id": "Lang-65",
+      "project": "Lang",
+      "vid": 65,
+      "jira": "LANG-59",
+      "buggy_rev": "c62bd307657aab6bf4be06e5c4c232195f6620f9",
+      "fixed_rev": "9cbf70d82285d7ebdd190f7cd59f2a9d82a09c61",
+      "trigger_tests": [
+        "org.apache.commons.lang.time.DateUtilsTest::testTruncateLang59"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.time.DateUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/65.src.patch"
+    },
+    {
+      "bug_id": "Lang-9",
+      "project": "Lang",
+      "vid": 9,
+      "jira": "LANG-832",
+      "buggy_rev": "ad72b9f2bf37bd61af18bde67c1622d90a5d8766",
+      "fixed_rev": "65a6458eaa2e1f88278e4bb5753a68bd825e3a80",
+      "trigger_tests": [
+        "org.apache.commons.lang3.time.FastDateFormat_ParserTest::testLANG_832",
+        "org.apache.commons.lang3.time.FastDateParserTest::testLANG_832"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.apache.commons.lang3.time.FastDateParser"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/9.src.patch"
+    },
+    {
+      "bug_id": "Time-1",
+      "project": "Time",
+      "vid": 1,
+      "jira": "93",
+      "buggy_rev": "8612f9e5b88c1bea933ef9ab1e431f5db3006b48",
+      "fixed_rev": "9a62b06be5d0df8e833ff8583398cca386608cac",
+      "trigger_tests": [
+        "org.joda.time.TestPartial_Constructors::testConstructorEx7_TypeArray_intArray"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.joda.time.field.UnsupportedDurationField",
+        "org.joda.time.Partial"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/1.src.patch"
+    },
+    {
+      "bug_id": "Time-10",
+      "project": "Time",
+      "vid": 10,
+      "jira": "22",
+      "buggy_rev": "efce99164f0bbd2c70e7f9d71884a32473e02c6d",
+      "fixed_rev": "3a413d7844c22dc6ddd50bf5d0d55ff3589e47ac",
+      "trigger_tests": [
+        "org.joda.time.TestDays::testFactory_daysBetween_RPartial_MonthDay",
+        "org.joda.time.TestMonths::testFactory_monthsBetween_RPartial_MonthDay"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.joda.time.base.BaseSingleFieldPeriod"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/10.src.patch"
+    },
+    {
+      "bug_id": "Time-12",
+      "project": "Time",
+      "vid": 12,
+      "jira": "8",
+      "buggy_rev": "f2f9c8146446eff341dc7b66b5237b56d50abec0",
+      "fixed_rev": "77a6b3a44da7ae4af62e88b4b27eeefec2d768c2",
+      "trigger_tests": [
+        "org.joda.time.TestLocalDateTime_Constructors::testFactory_fromDateFields_beforeYearZero1",
+        "org.joda.time.TestLocalDateTime_Constructors::testFactory_fromDateFields_beforeYearZero3",
+        "org.joda.time.TestLocalDateTime_Constructors::testFactory_fromCalendarFields_beforeYearZero1",
+        "org.joda.time.TestLocalDateTime_Constructors::testFactory_fromCalendarFields_beforeYearZero3",
+        "org.joda.time.TestLocalDate_Constructors::testFactory_fromDateFields_beforeYearZero1",
+        "org.joda.time.TestLocalDate_Constructors::testFactory_fromDateFields_beforeYearZero3",
+        "org.joda.time.TestLocalDate_Constructors::testFactory_fromCalendarFields_beforeYearZero1",
+        "org.joda.time.TestLocalDate_Constructors::testFactory_fromCalendarFields_beforeYearZero3"
+      ],
+      "n_trigger": 8,
+      "modified_classes": [
+        "org.joda.time.LocalDate",
+        "org.joda.time.LocalDateTime"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/12.src.patch"
+    },
+    {
+      "bug_id": "Time-14",
+      "project": "Time",
+      "vid": 14,
+      "jira": "151",
+      "buggy_rev": "cc3262ff42e41f3b1f64290262704da3895fbe85",
+      "fixed_rev": "2ea856328ed5710537778d755a5ff52a6831a2ee",
+      "trigger_tests": [
+        "org.joda.time.TestMonthDay_Basics::testPlusMonths_int_negativeFromLeap",
+        "org.joda.time.TestMonthDay_Basics::testMinusDays_int_negativeFromLeap",
+        "org.joda.time.TestMonthDay_Basics::testPlusMonths_int_fromLeap",
+        "org.joda.time.TestMonthDay_Basics::testPlusMonths_int_negativeEndOfMonthAdjust",
+        "org.joda.time.TestMonthDay_Basics::testMinusMonths_int_endOfMonthAdjust",
+        "org.joda.time.TestMonthDay_Basics::testMinusMonths_int_negativeFromLeap",
+        "org.joda.time.TestMonthDay_Basics::testMinusMonths_int_fromLeap",
+        "org.joda.time.TestMonthDay_Basics::testPlusDays_int_fromLeap"
+      ],
+      "n_trigger": 8,
+      "modified_classes": [
+        "org.joda.time.chrono.BasicMonthOfYearDateTimeField"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/14.src.patch"
+    },
+    {
+      "bug_id": "Time-16",
+      "project": "Time",
+      "vid": 16,
+      "jira": "148",
+      "buggy_rev": "dba7c37ea3d83b32779d3bb13cb184aedf761a8a",
+      "fixed_rev": "706513d59425e7a9dc6bdb972f25b03b02e48558",
+      "trigger_tests": [
+        "org.joda.time.format.TestDateTimeFormatter::testParseInto_monthOnly_baseStartYear",
+        "org.joda.time.format.TestDateTimeFormatter::testParseInto_monthOnly_parseStartYear",
+        "org.joda.time.format.TestDateTimeFormatter::testParseInto_monthOnly_baseEndYear",
+        "org.joda.time.format.TestDateTimeFormatter::testParseInto_monthOnly",
+        "org.joda.time.format.TestDateTimeFormatter::testParseInto_monthDay_withDefaultYear_feb29",
+        "org.joda.time.format.TestDateTimeFormatter::testParseInto_monthDay_feb29",
+        "org.joda.time.format.TestDateTimeFormatter::testParseInto_monthOnly_parseEndYear"
+      ],
+      "n_trigger": 7,
+      "modified_classes": [
+        "org.joda.time.format.DateTimeFormatter"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/16.src.patch"
+    },
+    {
+      "bug_id": "Time-17",
+      "project": "Time",
+      "vid": 17,
+      "jira": "141",
+      "buggy_rev": "cdeacf09e33ddbaf75a4563d7bc62063f50972b1",
+      "fixed_rev": "a8913f5ad5dfde59263c981c9e9eb28e43fd2e00",
+      "trigger_tests": [
+        "org.joda.time.TestDateTimeZoneCutover::testBug3476684_adjustOffset"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.joda.time.DateTimeZone"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/17.src.patch"
+    },
+    {
+      "bug_id": "Time-19",
+      "project": "Time",
+      "vid": 19,
+      "jira": "124",
+      "buggy_rev": "a92450e88df85d6b7a0fa53517da46286c24f53f",
+      "fixed_rev": "82c5e4f9550e4df36e07b66f35f7c3e9d7eb5eba",
+      "trigger_tests": [
+        "org.joda.time.TestDateTimeZoneCutover::testDateTimeCreation_london"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.joda.time.DateTimeZone"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/19.src.patch"
+    },
+    {
+      "bug_id": "Time-20",
+      "project": "Time",
+      "vid": 20,
+      "jira": "126",
+      "buggy_rev": "17a60c9a7253d9a8fce6afe2ce46bea78ac53ebe",
+      "fixed_rev": "a92450e88df85d6b7a0fa53517da46286c24f53f",
+      "trigger_tests": [
+        "org.joda.time.format.TestDateTimeFormatterBuilder::test_printParseZoneDawsonCreek"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.joda.time.format.DateTimeFormatterBuilder"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/20.src.patch"
+    },
+    {
+      "bug_id": "Time-23",
+      "project": "Time",
+      "vid": 23,
+      "jira": "112",
+      "buggy_rev": "bfd37a81dd7f4c9e35340f3de0b5b1e8066a141b",
+      "fixed_rev": "14dedcbc04682c1b1b6c5ebe91bc930b79eeb572",
+      "trigger_tests": [
+        "org.joda.time.TestDateTimeZone::testForID_String_old"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.joda.time.DateTimeZone"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/23.src.patch"
+    },
+    {
+      "bug_id": "Time-24",
+      "project": "Time",
+      "vid": 24,
+      "jira": "107",
+      "buggy_rev": "c3bec2cd4eea2e87c650f5ad9b537dddb804778c",
+      "fixed_rev": "d50efdf75a8daeced88d79b168f68d189fb87e13",
+      "trigger_tests": [
+        "org.joda.time.format.TestDateTimeFormatter::testParseLocalDate_weekyear_month_week_2010",
+        "org.joda.time.format.TestDateTimeFormatter::testParseLocalDate_weekyear_month_week_2011",
+        "org.joda.time.format.TestDateTimeFormatter::testParseLocalDate_weekyear_month_week_2012",
+        "org.joda.time.format.TestDateTimeFormatter::testParseLocalDate_year_month_week_2010",
+        "org.joda.time.format.TestDateTimeFormatter::testParseLocalDate_year_month_week_2011",
+        "org.joda.time.format.TestDateTimeFormatter::testParseLocalDate_year_month_week_2012",
+        "org.joda.time.format.TestDateTimeFormatter::testParseLocalDate_year_month_week_2016"
+      ],
+      "n_trigger": 7,
+      "modified_classes": [
+        "org.joda.time.format.DateTimeParserBucket"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/24.src.patch"
+    },
+    {
+      "bug_id": "Time-25",
+      "project": "Time",
+      "vid": 25,
+      "jira": "90",
+      "buggy_rev": "c7a581e55fc988bd90fa4bb1b0acece5181b7c5f",
+      "fixed_rev": "552be4b677ec30a34d04d234395ba1a8c7beaacf",
+      "trigger_tests": [
+        "org.joda.time.TestDateTimeZoneCutover::test_DateTime_constructor_Moscow_Autumn",
+        "org.joda.time.TestDateTimeZoneCutover::test_getOffsetFromLocal_Moscow_Autumn_overlap_mins",
+        "org.joda.time.TestDateTimeZoneCutover::test_getOffsetFromLocal_Moscow_Autumn"
+      ],
+      "n_trigger": 3,
+      "modified_classes": [
+        "org.joda.time.DateTimeZone"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/25.src.patch"
+    },
+    {
+      "bug_id": "Time-26",
+      "project": "Time",
+      "vid": 26,
+      "jira": "60",
+      "buggy_rev": "218a7fe91a685e089ab8fd7700806f7a6083f18d",
+      "fixed_rev": "c7a581e55fc988bd90fa4bb1b0acece5181b7c5f",
+      "trigger_tests": [
+        "org.joda.time.TestDateTimeZoneCutover::testWithSecondOfMinuteInDstChange",
+        "org.joda.time.TestDateTimeZoneCutover::testWithMinuteOfHourInDstChange",
+        "org.joda.time.TestDateTimeZoneCutover::testWithMinuteOfHourInDstChange_mockZone",
+        "org.joda.time.TestDateTimeZoneCutover::testBug2182444_usCentral",
+        "org.joda.time.TestDateTimeZoneCutover::testWithMillisOfSecondInDstChange_Paris_summer",
+        "org.joda.time.TestDateTimeZoneCutover::testWithHourOfDayInDstChange",
+        "org.joda.time.TestDateTimeZoneCutover::testWithMillisOfSecondInDstChange_NewYork_winter",
+        "org.joda.time.TestDateTimeZoneCutover::testBug2182444_ausNSW"
+      ],
+      "n_trigger": 8,
+      "modified_classes": [
+        "org.joda.time.chrono.ZonedChronology",
+        "org.joda.time.DateTimeZone",
+        "org.joda.time.field.LenientDateTimeField"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/26.src.patch"
+    },
+    {
+      "bug_id": "Time-27",
+      "project": "Time",
+      "vid": 27,
+      "jira": "64",
+      "buggy_rev": "d090b642dc04259286d3478cfa49f1da2f0755e6",
+      "fixed_rev": "e0559c503f65641b9546c37e7c84c866caf37e66",
+      "trigger_tests": [
+        "org.joda.time.format.TestPeriodFormatterBuilder::testBug2495455"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.joda.time.format.PeriodFormatterBuilder"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/27.src.patch"
+    },
+    {
+      "bug_id": "Time-3",
+      "project": "Time",
+      "vid": 3,
+      "jira": "77",
+      "buggy_rev": "3ba9ba799b3261b7332a467a88be142c83b298fd",
+      "fixed_rev": "8d109fe1a999a11b4557536dd96f9210460a5936",
+      "trigger_tests": [
+        "org.joda.time.TestMutableDateTime_Adds::testAddYears_int_dstOverlapWinter_addZero",
+        "org.joda.time.TestMutableDateTime_Adds::testAddDays_int_dstOverlapWinter_addZero",
+        "org.joda.time.TestMutableDateTime_Adds::testAddWeeks_int_dstOverlapWinter_addZero",
+        "org.joda.time.TestMutableDateTime_Adds::testAdd_DurationFieldType_int_dstOverlapWinter_addZero",
+        "org.joda.time.TestMutableDateTime_Adds::testAddMonths_int_dstOverlapWinter_addZero"
+      ],
+      "n_trigger": 5,
+      "modified_classes": [
+        "org.joda.time.MutableDateTime"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/3.src.patch"
+    },
+    {
+      "bug_id": "Time-4",
+      "project": "Time",
+      "vid": 4,
+      "jira": "88",
+      "buggy_rev": "bcb044669b4d1f8d334861ccbd169924d6ef3b54",
+      "fixed_rev": "3ba9ba799b3261b7332a467a88be142c83b298fd",
+      "trigger_tests": [
+        "org.joda.time.TestPartial_Basics::testWith3"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.joda.time.Partial"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/4.src.patch"
+    },
+    {
+      "bug_id": "Time-5",
+      "project": "Time",
+      "vid": 5,
+      "jira": "79",
+      "buggy_rev": "a38b5e0c620a4a4dc310d35105e3e432c4e91fc3",
+      "fixed_rev": "a6cb59ed2280ab0a32995fa8b5f1a7b0d47cb815",
+      "trigger_tests": [
+        "org.joda.time.TestPeriod_Basics::testNormalizedStandard_periodType_months1",
+        "org.joda.time.TestPeriod_Basics::testNormalizedStandard_periodType_months2",
+        "org.joda.time.TestPeriod_Basics::testNormalizedStandard_periodType_monthsWeeks"
+      ],
+      "n_trigger": 3,
+      "modified_classes": [
+        "org.joda.time.Period"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/5.src.patch"
+    },
+    {
+      "bug_id": "Time-7",
+      "project": "Time",
+      "vid": 7,
+      "jira": "21",
+      "buggy_rev": "6bf5bba0f77f3023dec23a1de6e0a8cef8585f61",
+      "fixed_rev": "1adb1e69863dcd1ff282692bf1452c422528eeb9",
+      "trigger_tests": [
+        "org.joda.time.format.TestDateTimeFormatter::testParseInto_monthDay_feb29_newYork_startOfYear",
+        "org.joda.time.format.TestDateTimeFormatter::testParseInto_monthDay_feb29_tokyo_endOfYear"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.joda.time.format.DateTimeFormatter"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/7.src.patch"
+    }
+  ],
+  "val": [
+    {
+      "bug_id": "Chart-18",
+      "project": "Chart",
+      "vid": 18,
+      "jira": "UNKNOWN",
+      "buggy_rev": "620",
+      "fixed_rev": "621",
+      "trigger_tests": [
+        "org.jfree.data.category.junit.DefaultCategoryDatasetTests::testBug1835955",
+        "org.jfree.data.junit.DefaultKeyedValues2DTests::testRemoveColumnByKey",
+        "org.jfree.data.junit.DefaultKeyedValuesTests::testRemoveValue",
+        "org.jfree.data.junit.DefaultKeyedValuesTests::testGetIndex2"
+      ],
+      "n_trigger": 4,
+      "modified_classes": [
+        "org.jfree.data.DefaultKeyedValues",
+        "org.jfree.data.DefaultKeyedValues2D"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/18.src.patch"
+    },
+    {
+      "bug_id": "Chart-25",
+      "project": "Chart",
+      "vid": 25,
+      "jira": "UNKNOWN",
+      "buggy_rev": "162",
+      "fixed_rev": "164",
+      "trigger_tests": [
+        "org.jfree.chart.renderer.category.junit.StatisticalBarRendererTests::testDrawWithNullMeanVertical",
+        "org.jfree.chart.renderer.category.junit.StatisticalBarRendererTests::testDrawWithNullDeviationVertical",
+        "org.jfree.chart.renderer.category.junit.StatisticalBarRendererTests::testDrawWithNullMeanHorizontal",
+        "org.jfree.chart.renderer.category.junit.StatisticalBarRendererTests::testDrawWithNullDeviationHorizontal"
+      ],
+      "n_trigger": 4,
+      "modified_classes": [
+        "org.jfree.chart.renderer.category.StatisticalBarRenderer"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/25.src.patch"
+    },
+    {
+      "bug_id": "Chart-5",
+      "project": "Chart",
+      "vid": 5,
+      "jira": "862",
+      "buggy_rev": "1695",
+      "fixed_rev": "1696",
+      "trigger_tests": [
+        "org.jfree.data.xy.junit.XYSeriesTests::testBug1955483"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.data.xy.XYSeries"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/5.src.patch"
+    },
+    {
+      "bug_id": "Lang-19",
+      "project": "Lang",
+      "vid": 19,
+      "jira": "LANG-710",
+      "buggy_rev": "23a71e792bf4ff7263d196047c2f378e888ce04f",
+      "fixed_rev": "8914d7f617f78aae8c85405856283c98d4e43990",
+      "trigger_tests": [
+        "org.apache.commons.lang3.text.translate.NumericEntityUnescaperTest::testUnfinishedEntity",
+        "org.apache.commons.lang3.text.translate.NumericEntityUnescaperTest::testOutOfBounds"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.apache.commons.lang3.text.translate.NumericEntityUnescaper"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/19.src.patch"
+    },
+    {
+      "bug_id": "Lang-26",
+      "project": "Lang",
+      "vid": 26,
+      "jira": "LANG-645",
+      "buggy_rev": "f7f19a3d2f98f48924d38fec2308dc3db83445d8",
+      "fixed_rev": "14a0cc2a9baf84a97348263975082ef3857daf97",
+      "trigger_tests": [
+        "org.apache.commons.lang3.time.FastDateFormatTest::testLang645"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.time.FastDateFormat"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/26.src.patch"
+    },
+    {
+      "bug_id": "Lang-28",
+      "project": "Lang",
+      "vid": 28,
+      "jira": "LANG-617",
+      "buggy_rev": "c0041cafc2fda3fb437009d5417ba5ebeb32ad35",
+      "fixed_rev": "bef3eb6ed060d5ae14da6ce5a1909675b8cf5650",
+      "trigger_tests": [
+        "org.apache.commons.lang3.text.translate.NumericEntityUnescaperTest::testSupplementaryUnescaping"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.text.translate.NumericEntityUnescaper"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/28.src.patch"
+    },
+    {
+      "bug_id": "Lang-42",
+      "project": "Lang",
+      "vid": 42,
+      "jira": "LANG-480",
+      "buggy_rev": "00fee20efcd5d1e79cfcac501f19f2163a34fd09",
+      "fixed_rev": "c0683957931ffa3df218ff68ca31e257174a6466",
+      "trigger_tests": [
+        "org.apache.commons.lang.StringEscapeUtilsTest::testEscapeHtmlHighUnicode"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.Entities"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/42.src.patch"
+    },
+    {
+      "bug_id": "Lang-45",
+      "project": "Lang",
+      "vid": 45,
+      "jira": "LANG-419",
+      "buggy_rev": "04f767b393b5849185f4ddf8f7ae8fc0b255e9bf",
+      "fixed_rev": "4342bd5d69d122a16c735416039b4b2ca27897ad",
+      "trigger_tests": [
+        "org.apache.commons.lang.WordUtilsTest::testAbbreviate"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.WordUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/45.src.patch"
+    },
+    {
+      "bug_id": "Lang-50",
+      "project": "Lang",
+      "vid": 50,
+      "jira": "LANG-368",
+      "buggy_rev": "43cf3f491e7b9b42dc4a5fa4d7bc00cef1d38f7e",
+      "fixed_rev": "127e6e338f088b82eea1967d31c1abf8d51a364f",
+      "trigger_tests": [
+        "org.apache.commons.lang.time.FastDateFormatTest::test_changeDefault_Locale_DateInstance",
+        "org.apache.commons.lang.time.FastDateFormatTest::test_changeDefault_Locale_DateTimeInstance"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.apache.commons.lang.time.FastDateFormat"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/50.src.patch"
+    },
+    {
+      "bug_id": "Lang-7",
+      "project": "Lang",
+      "vid": 7,
+      "jira": "LANG-822",
+      "buggy_rev": "a7b467a74cbe1160d676dc070a19d19764e132a3",
+      "fixed_rev": "350cf8c2da08ccde6b4d71b19bb3df97256ea368",
+      "trigger_tests": [
+        "org.apache.commons.lang3.math.NumberUtilsTest::testCreateNumber"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.math.NumberUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/7.src.patch"
+    },
+    {
+      "bug_id": "Lang-8",
+      "project": "Lang",
+      "vid": 8,
+      "jira": "LANG-818",
+      "buggy_rev": "cfab1e4fa19755d65de7b81206d86f9e98622d8e",
+      "fixed_rev": "04babff3798680e012646988841bcc710a9e3c54",
+      "trigger_tests": [
+        "org.apache.commons.lang3.time.FastDateFormat_PrinterTest::testCalendarTimezoneRespected",
+        "org.apache.commons.lang3.time.FastDatePrinterTest::testCalendarTimezoneRespected"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.apache.commons.lang3.time.FastDatePrinter"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/8.src.patch"
+    },
+    {
+      "bug_id": "Time-11",
+      "project": "Time",
+      "vid": 11,
+      "jira": "18",
+      "buggy_rev": "6d5104753470c130336e319a64009c0553b29c96",
+      "fixed_rev": "57eb4cbb9044771cd46a9eee0c62016618930226",
+      "trigger_tests": [
+        "org.joda.time.tz.TestCompiler::testDateTimeZoneBuilder"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.joda.time.tz.ZoneInfoCompiler"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/11.src.patch"
+    },
+    {
+      "bug_id": "Time-2",
+      "project": "Time",
+      "vid": 2,
+      "jira": "93",
+      "buggy_rev": "8d109fe1a999a11b4557536dd96f9210460a5936",
+      "fixed_rev": "8612f9e5b88c1bea933ef9ab1e431f5db3006b48",
+      "trigger_tests": [
+        "org.joda.time.TestPartial_Basics::testWith_baseAndArgHaveNoRange"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.joda.time.field.UnsupportedDurationField",
+        "org.joda.time.Partial"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/2.src.patch"
+    },
+    {
+      "bug_id": "Time-8",
+      "project": "Time",
+      "vid": 8,
+      "jira": "42",
+      "buggy_rev": "96f586cb8dac7eee62e9be519a3eab125c47bb23",
+      "fixed_rev": "362ed1787724cda3ded37de2b0aa0f13adf0a66e",
+      "trigger_tests": [
+        "org.joda.time.TestDateTimeZone::testForOffsetHoursMinutes_int_int"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.joda.time.DateTimeZone"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/8.src.patch"
+    }
+  ],
+  "test": [
+    {
+      "bug_id": "Chart-1",
+      "project": "Chart",
+      "vid": 1,
+      "jira": "983",
+      "buggy_rev": "2264",
+      "fixed_rev": "2266",
+      "trigger_tests": [
+        "org.jfree.chart.renderer.category.junit.AbstractCategoryItemRendererTests::test2947660"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.chart.renderer.category.AbstractCategoryItemRenderer"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/1.src.patch"
+    },
+    {
+      "bug_id": "Chart-21",
+      "project": "Chart",
+      "vid": 21,
+      "jira": "UNKNOWN",
+      "buggy_rev": "227",
+      "fixed_rev": "231",
+      "trigger_tests": [
+        "org.jfree.data.statistics.junit.DefaultBoxAndWhiskerCategoryDatasetTests::testGetRangeBounds"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/21.src.patch"
+    },
+    {
+      "bug_id": "Chart-22",
+      "project": "Chart",
+      "vid": 22,
+      "jira": "UNKNOWN",
+      "buggy_rev": "225",
+      "fixed_rev": "227",
+      "trigger_tests": [
+        "org.jfree.data.junit.KeyedObjects2DTests::testRemoveColumnByKey",
+        "org.jfree.data.junit.KeyedObjects2DTests::testRemoveValue",
+        "org.jfree.data.junit.KeyedObjects2DTests::testGetValueByKey",
+        "org.jfree.data.junit.KeyedObjects2DTests::testRemoveColumnByIndex",
+        "org.jfree.data.junit.KeyedObjects2DTests::testSetObject",
+        "org.jfree.data.junit.KeyedObjects2DTests::testRemoveRowByKey"
+      ],
+      "n_trigger": 6,
+      "modified_classes": [
+        "org.jfree.data.KeyedObjects2D"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/22.src.patch"
+    },
+    {
+      "bug_id": "Chart-4",
+      "project": "Chart",
+      "vid": 4,
+      "jira": "UNKNOWN",
+      "buggy_rev": "2182",
+      "fixed_rev": "2183",
+      "trigger_tests": [
+        "org.jfree.chart.axis.junit.LogAxisTests::testXYAutoRange1",
+        "org.jfree.chart.axis.junit.LogAxisTests::testXYAutoRange2",
+        "org.jfree.chart.axis.junit.NumberAxisTests::testXYAutoRange1",
+        "org.jfree.chart.axis.junit.NumberAxisTests::testXYAutoRange2",
+        "org.jfree.chart.axis.junit.ValueAxisTests::testAxisMargins",
+        "org.jfree.chart.junit.JFreeChartTests::testSerialization4",
+        "org.jfree.chart.junit.ScatterPlotTests::testDrawWithNullInfo",
+        "org.jfree.chart.junit.ScatterPlotTests::testSetSeriesToolTipGenerator",
+        "org.jfree.chart.junit.ScatterPlotTests::testReplaceDataset",
+        "org.jfree.chart.junit.TimeSeriesChartTests::testDrawWithNullInfo",
+        "org.jfree.chart.junit.TimeSeriesChartTests::testSetSeriesToolTipGenerator",
+        "org.jfree.chart.junit.TimeSeriesChartTests::testReplaceDataset",
+        "org.jfree.chart.junit.XYAreaChartTests::testDrawWithNullInfo",
+        "org.jfree.chart.junit.XYAreaChartTests::testSetSeriesToolTipGenerator",
+        "org.jfree.chart.junit.XYAreaChartTests::testReplaceDataset",
+        "org.jfree.chart.junit.XYStepAreaChartTests::testDrawWithNullInfo",
+        "org.jfree.chart.junit.XYStepAreaChartTests::testSetSeriesToolTipGenerator",
+        "org.jfree.chart.junit.XYStepAreaChartTests::testReplaceDataset",
+        "org.jfree.chart.junit.XYStepChartTests::testDrawWithNullInfo",
+        "org.jfree.chart.junit.XYStepChartTests::testSetSeriesToolTipGenerator",
+        "org.jfree.chart.junit.XYStepChartTests::testReplaceDataset",
+        "org.jfree.chart.plot.junit.XYPlotTests::testDrawRangeGridlines"
+      ],
+      "n_trigger": 22,
+      "modified_classes": [
+        "org.jfree.chart.plot.XYPlot"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/4.src.patch"
+    },
+    {
+      "bug_id": "Chart-8",
+      "project": "Chart",
+      "vid": 8,
+      "jira": "UNKNOWN",
+      "buggy_rev": "1084",
+      "fixed_rev": "1085",
+      "trigger_tests": [
+        "org.jfree.data.time.junit.WeekTests::testConstructor"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.data.time.Week"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/8.src.patch"
+    },
+    {
+      "bug_id": "Chart-9",
+      "project": "Chart",
+      "vid": 9,
+      "jira": "818",
+      "buggy_rev": "1082",
+      "fixed_rev": "1083",
+      "trigger_tests": [
+        "org.jfree.data.time.junit.TimeSeriesTests::testBug1864222"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.jfree.data.time.TimeSeries"
+      ],
+      "src_patch_rel": "framework/projects/Chart/patches/9.src.patch"
+    },
+    {
+      "bug_id": "Lang-1",
+      "project": "Lang",
+      "vid": 1,
+      "jira": "LANG-747",
+      "buggy_rev": "396afc3e4693cfee182efe582455f2d97058c068",
+      "fixed_rev": "d1a45e9738de5b3e299bb51e987565dcce55fee6",
+      "trigger_tests": [
+        "org.apache.commons.lang3.math.NumberUtilsTest::TestLang747"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.math.NumberUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/1.src.patch"
+    },
+    {
+      "bug_id": "Lang-11",
+      "project": "Lang",
+      "vid": 11,
+      "jira": "LANG-807",
+      "buggy_rev": "27bcbcc728434ffb2c45e81c0e75e6a3d6da3441",
+      "fixed_rev": "4a65cb8da23d6667ac6f91775309b4da9b315d95",
+      "trigger_tests": [
+        "org.apache.commons.lang3.RandomStringUtilsTest::testLANG807"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.RandomStringUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/11.src.patch"
+    },
+    {
+      "bug_id": "Lang-12",
+      "project": "Lang",
+      "vid": 12,
+      "jira": "LANG-805",
+      "buggy_rev": "1971d3ed8ba303eccc83935e352758ceca9f34d7",
+      "fixed_rev": "27bcbcc728434ffb2c45e81c0e75e6a3d6da3441",
+      "trigger_tests": [
+        "org.apache.commons.lang3.RandomStringUtilsTest::testExceptions",
+        "org.apache.commons.lang3.RandomStringUtilsTest::testLANG805"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.apache.commons.lang3.RandomStringUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/12.src.patch"
+    },
+    {
+      "bug_id": "Lang-15",
+      "project": "Lang",
+      "vid": 15,
+      "jira": "LANG-775",
+      "buggy_rev": "e6a1d017b1aeca6986c5e8486c9f8ce6360872d4",
+      "fixed_rev": "c71d0f03dab384f98ef2c0ba0050822fba22a063",
+      "trigger_tests": [
+        "org.apache.commons.lang3.reflect.TypeUtilsTest::testGetTypeArguments",
+        "org.apache.commons.lang3.reflect.TypeUtilsTest::testIsAssignable"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.apache.commons.lang3.reflect.TypeUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/15.src.patch"
+    },
+    {
+      "bug_id": "Lang-20",
+      "project": "Lang",
+      "vid": 20,
+      "jira": "LANG-703",
+      "buggy_rev": "f5cb67acd964ee173967081205eb30c43ba585c3",
+      "fixed_rev": "a80f11cf9d02d2517c7f230f24949cbebaafc0c2",
+      "trigger_tests": [
+        "org.apache.commons.lang3.StringUtilsTest::testJoin_ArrayChar",
+        "org.apache.commons.lang3.StringUtilsTest::testJoin_Objectarray"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.apache.commons.lang3.StringUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/20.src.patch"
+    },
+    {
+      "bug_id": "Lang-24",
+      "project": "Lang",
+      "vid": 24,
+      "jira": "LANG-664",
+      "buggy_rev": "7df70a8c6b14452767ac932a14640e32a1dc16da",
+      "fixed_rev": "8e2f4ddb9a1ecd7a1bf7d752c2c891d630287036",
+      "trigger_tests": [
+        "org.apache.commons.lang3.math.NumberUtilsTest::testIsNumber"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang3.math.NumberUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/24.src.patch"
+    },
+    {
+      "bug_id": "Lang-31",
+      "project": "Lang",
+      "vid": 31,
+      "jira": "LANG-607",
+      "buggy_rev": "8a8859cb88a49a8b967217bfc1daafe0805e7c86",
+      "fixed_rev": "1ced894df70d66f3a786c2c8cd6e23e0d4263d91",
+      "trigger_tests": [
+        "org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testContainsAnyCharArrayWithSupplementaryChars",
+        "org.apache.commons.lang3.StringUtilsEqualsIndexOfTest::testContainsAnyStringWithSupplementaryChars"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.apache.commons.lang3.StringUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/31.src.patch"
+    },
+    {
+      "bug_id": "Lang-41",
+      "project": "Lang",
+      "vid": 41,
+      "jira": "LANG-535",
+      "buggy_rev": "bb8709f3e30e7c13530dfef458a4c370783de2be",
+      "fixed_rev": "2dc56182579703153e5c9886b3ecd22bbc348b49",
+      "trigger_tests": [
+        "org.apache.commons.lang.ClassUtilsTest::test_getShortClassName_Class",
+        "org.apache.commons.lang.ClassUtilsTest::test_getPackageName_Class"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.apache.commons.lang.ClassUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/41.src.patch"
+    },
+    {
+      "bug_id": "Lang-49",
+      "project": "Lang",
+      "vid": 49,
+      "jira": "LANG-380",
+      "buggy_rev": "dab1bdfc0fec1d45def7d4e4870dc207bd954686",
+      "fixed_rev": "673385b43d0d5783039242460ba1c12b3f1f4e92",
+      "trigger_tests": [
+        "org.apache.commons.lang.math.FractionTest::testReduce"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.math.Fraction"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/49.src.patch"
+    },
+    {
+      "bug_id": "Lang-53",
+      "project": "Lang",
+      "vid": 53,
+      "jira": "LANG-346",
+      "buggy_rev": "2dfca4a424fe60e2bbb99cf5e0a5f9352142cc08",
+      "fixed_rev": "050fe8e916507c9716983868284d64e58c1b56d2",
+      "trigger_tests": [
+        "org.apache.commons.lang.time.DateUtilsTest::testRoundLang346"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.time.DateUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/53.src.patch"
+    },
+    {
+      "bug_id": "Lang-55",
+      "project": "Lang",
+      "vid": 55,
+      "jira": "LANG-315",
+      "buggy_rev": "de4952beaffe469b05f545b90344675e1889cb48",
+      "fixed_rev": "b16235ad108c4fcdb7117493394d26d2f0faeace",
+      "trigger_tests": [
+        "org.apache.commons.lang.time.StopWatchTest::testLang315"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.time.StopWatch"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/55.src.patch"
+    },
+    {
+      "bug_id": "Lang-56",
+      "project": "Lang",
+      "vid": 56,
+      "jira": "LANG-303",
+      "buggy_rev": "c47d6ce5343fbe1807c2c927bfb10a4792a43ff9",
+      "fixed_rev": "e9e167f9ebc7a73c5847745688ae127ecff6e2b1",
+      "trigger_tests": [
+        "org.apache.commons.lang.time.FastDateFormatTest::testLang303"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.time.FastDateFormat"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/56.src.patch"
+    },
+    {
+      "bug_id": "Lang-60",
+      "project": "Lang",
+      "vid": 60,
+      "jira": "LANG-295",
+      "buggy_rev": "8e52e2169b20f7bc3c6c520d4f0c98e5bf06b076",
+      "fixed_rev": "1a158281aa058ee2dc9cfae3b56012a9f92f3b2b",
+      "trigger_tests": [
+        "org.apache.commons.lang.text.StrBuilderTest::testLang295"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.text.StrBuilder"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/60.src.patch"
+    },
+    {
+      "bug_id": "Lang-63",
+      "project": "Lang",
+      "vid": 63,
+      "jira": "LANG-281",
+      "buggy_rev": "e91541fcbd89dc0567281127c950a8d9ead7189b",
+      "fixed_rev": "1d5c03fac601d6ce291c3fe3e5e51a11881e2fc0",
+      "trigger_tests": [
+        "org.apache.commons.lang.time.DurationFormatUtilsTest::testJiraLang281"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.time.DurationFormatUtils"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/63.src.patch"
+    },
+    {
+      "bug_id": "Lang-64",
+      "project": "Lang",
+      "vid": 64,
+      "jira": "LANG-259",
+      "buggy_rev": "d9c6932a6e2b27d56ebb665c152f9f7dca759a8a",
+      "fixed_rev": "07b7795b336b301def8a7dc6059c8e616ce5582e",
+      "trigger_tests": [
+        "org.apache.commons.lang.enums.ValuedEnumTest::testCompareTo_otherEnumType"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.apache.commons.lang.enums.ValuedEnum"
+      ],
+      "src_patch_rel": "framework/projects/Lang/patches/64.src.patch"
+    },
+    {
+      "bug_id": "Time-13",
+      "project": "Time",
+      "vid": 13,
+      "jira": "160",
+      "buggy_rev": "6a1b24c5d85270b57706b3f7ca0b4c05a752b3ff",
+      "fixed_rev": "5d08a1cdbfa6ce86a0baf637493c464e91e91968",
+      "trigger_tests": [
+        "org.joda.time.format.TestISOPeriodFormat::testFormatStandard_negative"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.joda.time.format.PeriodFormatterBuilder"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/13.src.patch"
+    },
+    {
+      "bug_id": "Time-15",
+      "project": "Time",
+      "vid": 15,
+      "jira": "147",
+      "buggy_rev": "383354adc669c3fd8d9e6fe3a25403df993e11e7",
+      "fixed_rev": "0cefc4c212e92e5dccdfa658785c419483317558",
+      "trigger_tests": [
+        "org.joda.time.field.TestFieldUtils::testSafeMultiplyLongInt"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.joda.time.field.FieldUtils"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/15.src.patch"
+    },
+    {
+      "bug_id": "Time-18",
+      "project": "Time",
+      "vid": 18,
+      "jira": "130",
+      "buggy_rev": "e16eb72a29d06ce36030b109156bea3244273fb8",
+      "fixed_rev": "b609d7d66d180f2eb537b27f5d605d0596e096ce",
+      "trigger_tests": [
+        "org.joda.time.chrono.TestGJChronology::testLeapYearRulesConstruction"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.joda.time.chrono.GJChronology"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/18.src.patch"
+    },
+    {
+      "bug_id": "Time-22",
+      "project": "Time",
+      "vid": 22,
+      "jira": "113",
+      "buggy_rev": "14dedcbc04682c1b1b6c5ebe91bc930b79eeb572",
+      "fixed_rev": "57c8aaf94b95323c295dcfec5f40f181846164e7",
+      "trigger_tests": [
+        "org.joda.time.TestDuration_Basics::testToPeriod_fixedZone",
+        "org.joda.time.TestPeriod_Constructors::testConstructor_long_fixedZone"
+      ],
+      "n_trigger": 2,
+      "modified_classes": [
+        "org.joda.time.base.BasePeriod"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/22.src.patch"
+    },
+    {
+      "bug_id": "Time-6",
+      "project": "Time",
+      "vid": 6,
+      "jira": "28",
+      "buggy_rev": "91b1ba4ed42ca0b345370ea3cc0ddcdb33781c6d",
+      "fixed_rev": "28aeba952e838fb12c9b934ce6ef65658e45d7b2",
+      "trigger_tests": [
+        "org.joda.time.chrono.TestGJDate::test_cutoverPreZero",
+        "org.joda.time.chrono.TestGJDate::test_plusWeekyears_positiveToNegative_crossCutover",
+        "org.joda.time.chrono.TestGJDate::test_plusYears_positiveToZero_crossCutover",
+        "org.joda.time.chrono.TestGJDate::test_plusYears_positiveToNegative_crossCutover",
+        "org.joda.time.chrono.TestGJDate::test_plusWeekyears_positiveToZero_crossCutover"
+      ],
+      "n_trigger": 5,
+      "modified_classes": [
+        "org.joda.time.chrono.GJChronology"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/6.src.patch"
+    },
+    {
+      "bug_id": "Time-9",
+      "project": "Time",
+      "vid": 9,
+      "jira": "43",
+      "buggy_rev": "08a3a0b969b1e5d1d06489a698fe9c9b69e2f2d9",
+      "fixed_rev": "96f586cb8dac7eee62e9be519a3eab125c47bb23",
+      "trigger_tests": [
+        "org.joda.time.TestDateTimeZone::testForOffsetHoursMinutes_int_int"
+      ],
+      "n_trigger": 1,
+      "modified_classes": [
+        "org.joda.time.DateTimeZone"
+      ],
+      "src_patch_rel": "framework/projects/Time/patches/9.src.patch"
+    }
+  ]
+}
